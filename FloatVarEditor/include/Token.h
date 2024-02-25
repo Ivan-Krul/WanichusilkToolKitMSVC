@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-enum class Token {
+enum class Token : char {
 	empty,
 	// main interaction block
 	var_edit,

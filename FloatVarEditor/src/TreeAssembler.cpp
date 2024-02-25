@@ -99,6 +99,8 @@ std::shared_ptr<BinarOperatorNode> TreeAssembler::parseToken_Equal(std::shared_p
         break;
     case Token::string:
     case Token::number:
+    case Token::bool_false:
+    case Token::bool_true:
         secondOperand = std::make_shared<ValueNode>(mTokens[mCurrentPos++]);
         break;
     case Token::atSign:
