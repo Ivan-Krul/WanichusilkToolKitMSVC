@@ -1,0 +1,12 @@
+ # script starts here
+
+// comments writes with double slash. Yeah, it's not logical, but it's good enough //
+ # we can also comment inline by hash, like in Bash, or in Python
+
+ # assigning binary value as string
+here:binary = "Hello world".;
+here:read;
+
+ # it outputs something more, but "Hello world" appears
+
+ # end of the script, or I could use 'exit'

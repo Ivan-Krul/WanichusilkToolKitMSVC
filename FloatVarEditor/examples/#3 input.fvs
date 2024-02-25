@@ -1,0 +1,7 @@
+
+here:type = "hitp".;  # set data_type as hitp, I can do this. Also after last string quote must be dot
+
+here:binary:write:toInt;  # input as int
+here:name:write;  # input as string
+
+here:read;

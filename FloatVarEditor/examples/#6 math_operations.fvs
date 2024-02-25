@@ -1,0 +1,33 @@
+
+here:name = "path".;
+here:binary:write:toInt;
+
+ # we use @() construction to handle math operations, you can do these constructions recursively, but without @
+here:binary:toInt = @(here:binary:toInt + 4);
+here:read;
+
+here:binary:toInt = @(here:binary:toInt - 10);
+here:read;
+
+ # instead of puting here too much, you can use keyword "this", as it's here:binary:toInt
+here:binary:toInt = @(this * 8 + 2);
+here:read;
+
+ # it's integer, so it can reproduce fraction by choosing smaller integer value in between result, like 4.3 -> 4 or 7.99 -> 7
+here:binary:toInt = @((4 - this) / 2);
+here:binary:toInt = @(4 - this / 2);
+here:read;
+
+here:binary:toInt = @(this / 2);
+here:read;
+
+ # same variable can represent as float value
+//
+     # it's hard convertion, that means, instead of 4 in float we get 5.605193857299268e-45 (it's still 4 in integers)
+	here:binary:toFloat = @(here:binary:toInt / 2);
+//
+
+ # here's a smooth convertion example
+here:binary:toFloat = @(here:binary:toFloat / 2);
+here:read;
+

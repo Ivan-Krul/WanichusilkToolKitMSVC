@@ -1,0 +1,12 @@
+
+here = file:out "example.fvc".;  # loading file to 'here', it's a only global variable, what represents float var container in ram
+
+here:read;
+
+here:binary:toInt = 12;
+
+here:read;
+
+file:in "example_res.fvc". = here; // saving a file like we assigning it, isn't that cool?
+	it saves as fvc, but whatever extension I put, It saves like .fvc anyway
+	it's literally called FloatVarContainer, and FloatVarDisk can replicate the file, and/or read //

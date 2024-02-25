@@ -1,0 +1,8 @@
+
+here:name = "Niko".;  # set name of the container, double dots means getting access to properties of container
+here:type = "hitp".;  # set data_type as hitp, I can do this. Also after last string quote must be dot
+here:binary:toInt = 67;  # set binary value as int and assigning a number
+
+here:read;
+ // it's actually output, instead of using function at start, it uses functions in end
+	it outputs as structure, like json //

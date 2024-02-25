@@ -1,0 +1,62 @@
+
+
+here:name = "Niko".;
+here:type = "objt".; # set as "objt", because we would access to the
+
+here:push "pos".; # pushing a new variable into current container. We can access by square brackets
+
+ # setting properties as it's container. With potention, you can store itself, but it's imposible
+#here["pos".]:name = "position".;
+ // we don't need to name, because here:push already did.
+	Moreover, it changes access, so if you uncomment 9th line, then you have to access with here["position".] //
+here["pos".]:type = "vec2".;
+here["pos".]:push "x".; # we can push further
+here["pos".]:push "y".; # and further
+
+ # set as nint, it's standartised type it's means "numeric integer", so it's can compatible with FloatVarNumeric
+here["pos".]["x".]:type = "nint".;
+here["pos".]["y".]:type = "nint".;
+
+ # as well, set as int
+here["pos".]["x".]:binary:toInt = 3;
+here["pos".]["y".]:binary:toInt = 3;
+
+here:push "items".;
+here["items".]:type = "aray".;
+
+ # if it's spaced, then it pushing as array. It can FloatVarContainer
+here["items".]:push;
+here["items".]:push;
+here["items".]:push;
+
+ # we accessing as array, so it's safe to name
+ // also you can do this
+
+	here:push "0".;
+
+	if you accessed like "here["0".]", it would read only by name, and not by number, unless it has a quotation marks //
+
+here["items".][0]:name = "Lightbulb".;
+here["items".][0]:type = "impt".;
+here["items".][0]:binary = "Lightbulb, someone say, what it's a \"Sun\"".; # You can set double quotes using \, so it's well-known feature
+
+here["items".][1]:name = "Black clover".;
+here["items".][1]:type = "impt".;
+here["items".][1]:binary = "It still dark".;
+
+here["items".][2]:name = "Pancake".;
+here["items".][2]:type = "ieat".;
+here["items".][2]:binary = "So sweet!".;
+
+ # at last, it's unnecessary to store indexes as predefined values
+here:push "index".;
+here["index".]:binary:toInt = 1;
+
+here["pos".]:read;
+here[here["index".]:binary:toInt]:read;
+
+ # deleting an element as it's function, like determination itself
+here["index".]:pop;
+ # after that, the "index" wouldn't exist in container
+
+// I can read as well from "pos" and "items" //
