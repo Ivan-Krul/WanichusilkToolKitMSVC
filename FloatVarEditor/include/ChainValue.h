@@ -54,6 +54,8 @@ public:
         }
     }
     ChainValueNumber(const std::string& value) {
+        mValid = true;
+
         if (value == "true" || value == "false") {
             mType = DataType::Bool;
             mValue.bol = value == "true";
@@ -63,14 +65,28 @@ public:
             mValue.flt = std::stof(value);
         }
         else if (isdigit(value[0])) { // if here would be -, then well, no offense
-            
+            if (value.find('.') == value.npos) {
+                // int
+                mType = DataType::Int;
+                mValue.in = std::stoi(value);
+            }
+            else {
+                mType = DataType::Float;
+                mValue.flt = std::stof(value);
+            }
 
         } else {
-            // ???
+            mValid = false;
         }
     }
     inline TypeChain getType() const override {
         return TypeChain::number;
+    }
+    inline bool isValid() const noexcept {
+        return mValid;
+    }
+    inline DataType getDataType() {
+        return mType;
     }
     template <typename T>
     inline std::enable_if_t<std::is_arithmetic_v<T>, T> getValue() const noexcept {
@@ -85,6 +101,7 @@ public:
 private:
 
     DataType     mType;
+    bool         mValid;
 
     union NumericValueUnion {
         bool     bol;
@@ -113,6 +130,13 @@ public:
     inline Operation getOperation() const noexcept {
         return mOperation;
     }
+    template <typename T, typename... TArgs>
+    inline std::enable_if_t<std::is_base_of_v<IChainValue, T>> pushArgument(TArgs&&... args) {
+        mArguments.push_back(std::make_unique<T>(args));
+    }
+    inline ListIChains getArguments() const noexcept {
+        return mArguments;
+    }
 
 private:
 
@@ -120,3 +144,31 @@ private:
     Operation   mOperation;
 };
 
+
+class ChainValueContainer : public IChainValue {
+public:
+    enum class DataType {
+        container,
+        string,
+        number,
+        datatype
+    };
+
+    enum class Property {
+        none,
+        binary,
+        datatype,
+        name
+    };
+
+    inline TypeChain getType() const override {
+        return TypeChain::container;
+    }
+
+private:
+
+    std::shared_ptr<InsideNode> mTrace;
+    DataType mType;
+    Property mSelectedProperty;
+
+};
