@@ -3,6 +3,8 @@
 #include "TreeAssembler.h"
 #include "FloatVar.h"
 
+using ListIChains = std::vector<std::unique_ptr<IChainValue>>;
+
 struct IChainValue {
     enum class TypeChain : char {
         function,
@@ -116,9 +118,15 @@ private:
 };
 
 
-class ChainValueFunction : public IChainValue {
+class ChainValueOperation : public IChainValue {
 public:
-    using ListIChains = std::vector<std::unique_ptr<IChainValue>>;
+    ChainValueOperation(Token oper) {
+        setOperation(oper);
+    }
+    ChainValueOperation(Token oper, const ListIChains& args) {
+        setOperation(oper);
+        mArguments = args;
+    }
 
     enum class Operation : char {
         clear, read, write, pop, push,
@@ -140,6 +148,18 @@ public:
 
 private:
 
+    void setOperation(Token token) {
+        switch (token) {
+        case Token::var_clear: mOperation = Operation::clear; break;
+        case Token::var_read:  mOperation = Operation::read;  break;
+        case Token::var_write: mOperation = Operation::write; break;
+        case Token::var_pop:   mOperation = Operation::pop;   break;
+        case Token::var_push:  mOperation = Operation::push;  break;
+        default:
+            break;
+        }          
+    }
+
     ListIChains mArguments;
     Operation   mOperation;
 };
@@ -147,28 +167,35 @@ private:
 
 class ChainValueContainer : public IChainValue {
 public:
-    enum class DataType {
-        container,
-        string,
-        number,
-        datatype
-    };
+    ChainValueContainer(const ElementNode& container) {
+        mSelectedProperty = Property::none;
+    }
 
     enum class Property {
-        none,
-        binary,
-        datatype,
-        name
+        none, binary, datatype, name
     };
 
     inline TypeChain getType() const override {
         return TypeChain::container;
     }
 
-private:
+    inline ListIChains getTrace() const noexcept {
+        return mTrace;
+    }
+    inline Property getPropertySelection() const noexcept {
+        return mSelectedProperty;
+    }
 
-    std::shared_ptr<InsideNode> mTrace;
-    DataType mType;
-    Property mSelectedProperty;
+private:
+    void resolveIndexes(const ElementNode& container) {
+        std::shared_ptr<ParentNode> guts;
+        for (size_t i = 0; i < container.getIndexSize(); i++) {
+            guts = container[i].getGutsNode();
+
+        }
+    }
+
+    ListIChains mTrace;
+    Property    mSelectedProperty;
 
 };
