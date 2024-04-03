@@ -3,6 +3,8 @@
 #include "TreeAssembler.h"
 #include "FloatVar.h"
 
+struct IChainValue;
+
 using ListIChains = std::vector<std::unique_ptr<IChainValue>>;
 
 struct IChainValue {
@@ -48,8 +50,8 @@ public:
         case DataType::Bool:   mValue.bol = value == "true";    break;
         case DataType::Char:   mValue.chr = std::stoi(value);   break;
         case DataType::Short:  mValue.shr = std::stoi(value);   break;
-        case DataType::Int:    mValue.in  = std::stoi(value);   break;
-        case DataType::Unsign: mValue.un  = std::stoul(value);  break;
+        case DataType::Int:    mValue.in = std::stoi(value);   break;
+        case DataType::Unsign: mValue.un = std::stoul(value);  break;
         case DataType::Size:   mValue.ull = std::stoull(value); break;
         case DataType::Float:  mValue.flt = std::stof(value);   break;
         case DataType::Double: mValue.dbl = std::stod(value);   break;
@@ -61,18 +63,15 @@ public:
         if (value == "true" || value == "false") {
             mType = DataType::Bool;
             mValue.bol = value == "true";
-        }
-        else if (value[0] == '.') {
+        } else if (value[0] == '.') {
             mType = DataType::Float;
             mValue.flt = std::stof(value);
-        }
-        else if (isdigit(value[0])) { // if here would be -, then well, no offense
+        } else if (isdigit(value[0])) { // if here would be -, then well, no offense
             if (value.find('.') == value.npos) {
                 // int
                 mType = DataType::Int;
                 mValue.in = std::stoi(value);
-            }
-            else {
+            } else {
                 mType = DataType::Float;
                 mValue.flt = std::stof(value);
             }
@@ -157,7 +156,7 @@ private:
         case Token::var_push:  mOperation = Operation::push;  break;
         default:
             break;
-        }          
+        }
     }
 
     ListIChains mArguments;
@@ -169,6 +168,7 @@ class ChainValueContainer : public IChainValue {
 public:
     ChainValueContainer(const ElementNode& container) {
         mSelectedProperty = Property::none;
+        resolveIndexes(container);
     }
 
     enum class Property {
@@ -189,9 +189,21 @@ public:
 private:
     void resolveIndexes(const ElementNode& container) {
         std::shared_ptr<ParentNode> guts;
+
         for (size_t i = 0; i < container.getIndexSize(); i++) {
             guts = container[i].getGutsNode();
 
+            switch (guts->getTokenDescriptor().tok) {
+            case Token::var_here:
+                mTrace.push_back(std::make_unique<ChainValueContainer>(*std::static_pointer_cast<ElementNode>(guts)));
+                break;
+            case Token::string:
+                mTrace.push_back(std::make_unique<ChainValueString>(guts->getTokenDescriptor().val));
+                break;
+            case Token::number:
+                mTrace.push_back(std::make_unique<ChainValueNumber>(guts->getTokenDescriptor().val));
+                break;
+            }
         }
     }
 
