@@ -2,7 +2,7 @@
 
 Analyzer& Analyzer::acceptRootNode(RootNode root) noexcept {
     mRoot = root;
-    clear();
+    clearLogs();
     return *this;
 }
 

@@ -4,15 +4,13 @@
 
 #include "Token.h"
 #include "NodeMain.h"
-#include "LogMessage.h"
+#include "LogWriter.h"
 #include "Lexer.h"
 
-class TreeAssembler {
+class TreeAssembler : public LogWriter {
 public:
 	TreeAssembler& acceptTokenList(const std::vector<TokenDescriptor>& tokens) noexcept;
-	TreeAssembler& setOptionOutputLogs() noexcept;
 	TreeAssembler& setOptionConcadBracketToIndex() noexcept;
-	TreeAssembler& outputLogs();
 	TreeAssembler& parse();
 	RootNode getRootNode() const;
 private:
@@ -38,9 +36,7 @@ private:
 	std::vector<TokenDescriptor> mTokens;
 	size_t mCurrentPos = 0;
 	size_t mLines = 0;
-	bool mOptionOutputLogs = false;
 	bool mOptionConcadBracketToIndex = false;
 
-	std::vector<LogMessage> mLogMessages;
 };
 

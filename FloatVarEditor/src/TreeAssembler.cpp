@@ -5,28 +5,12 @@ TreeAssembler& TreeAssembler::acceptTokenList(const std::vector<TokenDescriptor>
     mCurrentPos = 0;
     mLines = 0;
     mRoot.clear();
-    mLogMessages.clear();
-    return *this;
-}
-
-TreeAssembler& TreeAssembler::setOptionOutputLogs() noexcept {
-    mOptionOutputLogs = true;
+    clearLogs();
     return *this;
 }
 
 TreeAssembler& TreeAssembler::setOptionConcadBracketToIndex() noexcept {
     mOptionConcadBracketToIndex = true;
-    return *this;
-}
-
-TreeAssembler& TreeAssembler::outputLogs() {
-    if (mOptionOutputLogs) {
-        if (mLogMessages.empty())
-            mLogMessages.push_back(LogMessage("TreeAssembler", "Maybe everything is okay"));
-        for (auto& message : mLogMessages) {
-            message.print();
-        }
-    }
     return *this;
 }
 
@@ -115,5 +99,5 @@ std::shared_ptr<BinarOperatorNode> TreeAssembler::parseToken_Equal(std::shared_p
 }
 
 void TreeAssembler::writeError(const std::string& message, bool reqFromWhere, const std::string& tokenValue, bool except) {
-    mLogMessages.push_back(LogMessage(except ? "TreeAssebler:Exception" : "TreeAssebler", "In " + std::to_string(mLines) + " active line " + message + (reqFromWhere ? ". '"+tokenValue+"' requires it":"")));
+    writeErr(message + (reqFromWhere ? ". '" + tokenValue + "' requires it" : ""), mLines, except);
 }

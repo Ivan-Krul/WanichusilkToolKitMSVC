@@ -5,21 +5,18 @@
 
 #include <algorithm>
 
-#include "LogMessage.h"
+#include "LogWriter.h"
 #include "Token.h"
 
-class Lexer {
+class Lexer : public LogWriter {
 public:
 	static std::unordered_map<std::string, Token> sTokenDictionary;
 
 	Lexer& setOptionClearSpacing();
 	Lexer& setOptionAssembleString();
 	Lexer& setOptionAssembleNumber();
-	Lexer& setOptionOutputLogs();
 
 	Lexer& parse(const std::string& code);
-
-	Lexer& outputLogs();
 
 	std::vector<TokenDescriptor>& getListTokens() noexcept;
 private:
@@ -29,7 +26,6 @@ private:
 	bool clearInlineComment();
 	std::string formString();
 	std::string formNumber();
-	std::string formIndex();
 
 	bool markAsPlainCharacter();
 	void searchToken();
@@ -44,9 +40,7 @@ private:
 	bool mOptionClearSpacing = false;
 	bool mOptionAssembleString = false;
 	bool mOptionAssembleNumber = false;
-	bool mOptionOutputLogs = false;
 
-	std::vector<LogMessage> mLogMessages;
 	std::vector<size_t> mSizeCollection;
 	std::vector<TokenDescriptor> mTokens;
 

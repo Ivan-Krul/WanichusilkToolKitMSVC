@@ -13,7 +13,7 @@ public:
     void outputLogs() noexcept;
 
 protected:
-    void clear() noexcept;
+    void clearLogs() noexcept;
     void writeErr(const std::string& message, size_t line, bool except = false) noexcept;
 
 private:
@@ -33,8 +33,8 @@ inline void LogWriter::setOptionOutputLogs() noexcept {
     mOptionOutputLogs = true;
 }
 
-inline void LogWriter::clear() noexcept {
-    mLogMessages.clear();
+inline void LogWriter::clearLogs() noexcept {
+    mLogMessages.clearLogs();
 }
 
 inline void LogWriter::writeErr(const std::string& message, size_t line, bool except) noexcept {

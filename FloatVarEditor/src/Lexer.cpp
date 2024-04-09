@@ -15,16 +15,11 @@ Lexer& Lexer::setOptionAssembleNumber() {
 	return *this;
 }
 
-Lexer& Lexer::setOptionOutputLogs() {
-	mOptionOutputLogs = true;
-	return *this;
-}
-
 Lexer& Lexer::parse(const std::string& code) {
 	mCode = code;
 	mTokens.clear();
 	mTokens.reserve(mCode.size() >> 2);
-	mLogMessages.clear();
+	clearLogs();
 
 	gatherSize();
 
@@ -33,17 +28,6 @@ Lexer& Lexer::parse(const std::string& code) {
 
 	mTokens.shrink_to_fit();
 
-	return *this;
-}
-
-Lexer& Lexer::outputLogs() {
-	if (mOptionOutputLogs) {
-		if (mLogMessages.empty())
-			mLogMessages.push_back(LogMessage("Lexer", "Maybe everything is okay"));
-		for (auto& message : mLogMessages) {
-			message.print();
-		}
-	}
 	return *this;
 }
 
@@ -59,7 +43,7 @@ void Lexer::searchToken() {
 	}
 
 	if (!mFoundToken) {
-		mLogMessages.push_back(LogMessage("Lexer", "In " + std::to_string(mLine) + " line is weird symbol. It looks like \"" + mCode[0] + "\""));
+		writeErr("is weird symbol. It looks like \"" + mCode[0] + '"', mLine);
 		mPartion = mPartion[0];
 	}
 
