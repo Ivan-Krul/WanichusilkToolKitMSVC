@@ -178,6 +178,7 @@
     <ClInclude Include="include\Executor_.h" />
     <ClInclude Include="include\Lexer.h" />
     <ClInclude Include="include\LogMessage.h" />
+    <ClInclude Include="include\LogWriter.h" />
     <ClInclude Include="include\Token.h" />
     <ClInclude Include="include\TreeAssembler.h" />
     <ClInclude Include="include\NodeMain.h" />

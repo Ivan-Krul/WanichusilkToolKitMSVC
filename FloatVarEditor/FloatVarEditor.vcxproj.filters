@@ -77,6 +77,9 @@
     <ClInclude Include="include\ChainValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\LogWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="examples\#4 file_transference.fvs" />
