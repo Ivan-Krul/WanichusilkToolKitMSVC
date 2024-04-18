@@ -39,12 +39,6 @@
     <ClCompile Include="src\LexerAdditional.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Executor_.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Executor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Analyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,12 +59,6 @@
     <ClInclude Include="include\NodeMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Executor_.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Executor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Analyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,6 +66,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\LogWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DebugSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MainConveyor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

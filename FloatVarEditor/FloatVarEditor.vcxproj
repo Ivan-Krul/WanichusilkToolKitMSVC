@@ -160,8 +160,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Analyzer.cpp" />
-    <ClCompile Include="src\Executor.cpp" />
-    <ClCompile Include="src\Executor_.cpp" />
     <ClCompile Include="src\Lexer.cpp" />
     <ClCompile Include="src\FloatVarEditor.cpp" />
     <ClCompile Include="src\LexerAdditional.cpp" />
@@ -174,11 +172,11 @@
   <ItemGroup>
     <ClInclude Include="include\Analyzer.h" />
     <ClInclude Include="include\ChainValue.h" />
-    <ClInclude Include="include\Executor.h" />
-    <ClInclude Include="include\Executor_.h" />
     <ClInclude Include="include\Lexer.h" />
     <ClInclude Include="include\LogMessage.h" />
     <ClInclude Include="include\LogWriter.h" />
+    <ClInclude Include="include\DebugSettings.h" />
+    <ClInclude Include="include\MainConveyor.h" />
     <ClInclude Include="include\Token.h" />
     <ClInclude Include="include\TreeAssembler.h" />
     <ClInclude Include="include\NodeMain.h" />
