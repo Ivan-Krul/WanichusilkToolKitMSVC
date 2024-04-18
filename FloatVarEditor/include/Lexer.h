@@ -12,13 +12,15 @@ class Lexer : public LogWriter {
 public:
 	static std::unordered_map<std::string, Token> sTokenDictionary;
 
+	Lexer() noexcept : LogWriter("Lexer") {};
+
 	Lexer& setOptionClearSpacing();
 	Lexer& setOptionAssembleString();
 	Lexer& setOptionAssembleNumber();
 
 	Lexer& parse(const std::string& code);
 
-	std::vector<TokenDescriptor>& getListTokens() noexcept;
+	std::vector<TokenDescriptor> getListTokens() noexcept;
 private:
 	void gatherSize();
 	TokenDescriptor generateToken();

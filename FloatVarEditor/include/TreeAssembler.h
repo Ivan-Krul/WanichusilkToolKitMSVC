@@ -9,6 +9,8 @@
 
 class TreeAssembler : public LogWriter {
 public:
+	TreeAssembler() noexcept : LogWriter("TreeAssembler") {}
+
 	TreeAssembler& acceptTokenList(const std::vector<TokenDescriptor>& tokens) noexcept;
 	TreeAssembler& setOptionConcadBracketToIndex() noexcept;
 	TreeAssembler& parse();

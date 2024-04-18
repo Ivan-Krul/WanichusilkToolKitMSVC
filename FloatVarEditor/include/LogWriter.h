@@ -34,7 +34,7 @@ inline void LogWriter::setOptionOutputLogs() noexcept {
 }
 
 inline void LogWriter::clearLogs() noexcept {
-    mLogMessages.clearLogs();
+    mLogMessages.clear();
 }
 
 inline void LogWriter::writeErr(const std::string& message, size_t line, bool except) noexcept {

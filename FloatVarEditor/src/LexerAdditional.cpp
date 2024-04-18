@@ -13,7 +13,7 @@ bool Lexer::clearComment() {
 	}
 
 	if (commentElement == mCode.npos && commentElement < newline) {
-		mLogMessages.push_back(LogMessage("Lexer", "In " + std::to_string(mLine) + " line comment at the end of the file wasn't closed. Ignore all further!"));
+		writeErr("comment at the end of the file wasn't closed. Ignore all further!", mLine);
 		return true;
 	}
 
@@ -53,7 +53,7 @@ std::string Lexer::formString() {
 	size_t quoteElement = mCode.find("\".");
 
 	if (quoteElement == mCode.npos) {
-		mLogMessages.push_back(LogMessage("Lexer", "Hold on, where's the end of string symbol in " + std::to_string(mLine) + " line??? If you don't know it's '\".'"));
+		writeErr("is no end symbol for the string, bruh. If you don't know it's '\".'", mLine);
 		return std::string();
 	}
 

@@ -95,7 +95,7 @@ repeat:
 	return mCurrentToken;
 }
 
-std::vector<TokenDescriptor>& Lexer::getListTokens() noexcept {
+std::vector<TokenDescriptor> Lexer::getListTokens() noexcept {
 	return mTokens;
 }
 

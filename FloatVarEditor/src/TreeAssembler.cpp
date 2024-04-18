@@ -36,7 +36,7 @@ TreeAssembler& TreeAssembler::parse() {
             mLines++;
             ptr = parseExpression();
         } catch (const std::exception exc) {
-            writeError(", something went wrong : " + std::string(exc.what()), false, "", true);
+            writeError("something went wrong : " + std::string(exc.what()), false, "", true);
         }
         if (mCurrentPos >= mTokens.size())
             break;
