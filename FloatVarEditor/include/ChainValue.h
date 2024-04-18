@@ -5,7 +5,7 @@
 
 struct IChainValue;
 
-using ListIChains = std::vector<std::unique_ptr<IChainValue>>;
+using ListIChains = std::vector<std::shared_ptr<IChainValue>>;
 
 struct IChainValue {
     enum class TypeChain : char {
@@ -24,7 +24,7 @@ public:
     inline ChainValueString(const std::string& value) noexcept {
         mValue = value;
     }
-    inline TypeChain getType() const override {
+    inline TypeChain getType() const noexcept override {
         return TypeChain::string;
     }
     inline std::string getValue() const noexcept {
@@ -45,6 +45,8 @@ public:
 
     ChainValueNumber(const std::string& value, const DataType predefinedType) {
         mType = predefinedType;
+        mValid = true;
+        mValue = { 0 };
 
         switch (mType) {
         case DataType::Bool:   mValue.bol = value == "true";    break;
@@ -59,6 +61,8 @@ public:
     }
     ChainValueNumber(const std::string& value) {
         mValid = true;
+        mValue = { 0 };
+        mType = DataType::Bool;
 
         if (value == "true" || value == "false") {
             mType = DataType::Bool;
@@ -80,7 +84,7 @@ public:
             mValid = false;
         }
     }
-    inline TypeChain getType() const override {
+    inline TypeChain getType() const noexcept override {
         return TypeChain::number;
     }
     inline bool isValid() const noexcept {
@@ -128,10 +132,10 @@ public:
     }
 
     enum class Operation : char {
-        clear, read, write, pop, push,
+        clear, read, write, pop, push
     };
 
-    inline TypeChain getType() const override {
+    inline TypeChain getType() const noexcept override {
         return TypeChain::function;
     }
     inline Operation getOperation() const noexcept {
@@ -139,7 +143,7 @@ public:
     }
     template <typename T, typename... TArgs>
     inline std::enable_if_t<std::is_base_of_v<IChainValue, T>> pushArgument(TArgs&&... args) {
-        mArguments.push_back(std::make_unique<T>(args));
+        mArguments.push_back(std::make_shared<T>(args));
     }
     inline ListIChains getArguments() const noexcept {
         return mArguments;
@@ -163,7 +167,6 @@ private:
     Operation   mOperation;
 };
 
-
 class ChainValueContainer : public IChainValue {
 public:
     ChainValueContainer(const ElementNode& container) {
@@ -175,7 +178,7 @@ public:
         none, binary, datatype, name
     };
 
-    inline TypeChain getType() const override {
+    inline TypeChain getType() const noexcept override {
         return TypeChain::container;
     }
 
@@ -195,13 +198,13 @@ private:
 
             switch (guts->getTokenDescriptor().tok) {
             case Token::var_here:
-                mTrace.push_back(std::make_unique<ChainValueContainer>(*std::static_pointer_cast<ElementNode>(guts)));
+                mTrace.push_back(std::make_shared<ChainValueContainer>(*std::static_pointer_cast<ElementNode>(guts)));
                 break;
             case Token::string:
-                mTrace.push_back(std::make_unique<ChainValueString>(guts->getTokenDescriptor().val));
+                mTrace.push_back(std::make_shared<ChainValueString>(guts->getTokenDescriptor().val));
                 break;
             case Token::number:
-                mTrace.push_back(std::make_unique<ChainValueNumber>(guts->getTokenDescriptor().val));
+                mTrace.push_back(std::make_shared<ChainValueNumber>(guts->getTokenDescriptor().val));
                 break;
             }
         }

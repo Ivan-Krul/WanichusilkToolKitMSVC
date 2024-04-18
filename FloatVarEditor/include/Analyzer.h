@@ -17,9 +17,10 @@ public:
 private:
     void analyzeLine(size_t line);
 
-    std::vector<ListIChains> mChains;
-    ListIChains              mTempChain;
-    RootNode                 mRoot;
+    std::vector<ListIChains>    mChains;
+    ListIChains                 mTempChain;
+    RootNode                    mRoot;
+    std::shared_ptr<ParentNode> mTempRoot;
 
 };
 
