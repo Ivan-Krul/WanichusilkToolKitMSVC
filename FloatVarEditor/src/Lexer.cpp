@@ -43,7 +43,7 @@ void Lexer::searchToken() {
 	}
 
 	if (!mFoundToken) {
-		writeErr("is weird symbol. It looks like \"" + mCode[0] + '"', mLine);
+		writeErr("is weird symbol. It looks like \"" + mCode[0] + '"');
 		mPartion = mPartion[0];
 	}
 

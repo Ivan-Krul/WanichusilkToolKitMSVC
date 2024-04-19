@@ -3,7 +3,6 @@
 TreeAssembler& TreeAssembler::acceptTokenList(const std::vector<TokenDescriptor>& tokens) noexcept {
     mTokens = tokens;
     mCurrentPos = 0;
-    mLines = 0;
     mRoot.clear();
     clearLogs();
     return *this;
@@ -33,7 +32,7 @@ TreeAssembler& TreeAssembler::parse() {
     
     while (mCurrentPos < mTokens.size()) {
         try {
-            mLines++;
+            mLine++;
             ptr = parseExpression();
         } catch (const std::exception exc) {
             writeError("something went wrong : " + std::string(exc.what()), false, "", true);
@@ -99,5 +98,5 @@ std::shared_ptr<BinarOperatorNode> TreeAssembler::parseToken_Equal(std::shared_p
 }
 
 void TreeAssembler::writeError(const std::string& message, bool reqFromWhere, const std::string& tokenValue, bool except) {
-    writeErr(message + (reqFromWhere ? ". '" + tokenValue + "' requires it" : ""), mLines, except);
+    writeErr(message + (reqFromWhere ? ". '" + tokenValue + "' requires it" : ""), except);
 }

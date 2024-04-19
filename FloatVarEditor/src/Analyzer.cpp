@@ -9,16 +9,16 @@ Analyzer& Analyzer::acceptRootNode(RootNode root) noexcept {
 Analyzer& Analyzer::analyze() {
     auto root_array = mRoot.getArray();
 
-    for (size_t i = 0; i < root_array.size(); i++) {
+    for (mLine = 0; mLine < root_array.size(); mLine++) {
         try {
-            mTempRoot = root_array[i];
-            analyzeLine(i);
+            mTempRoot = root_array[mLine];
+            analyzeLine();
         }
         catch (const std::exception& exc) {
-            writeErr("something went wrong : " + std::string(exc.what()), i, true);
+            writeErr("something went wrong : " + std::string(exc.what()), true);
         }
         if (mTempChain.empty())
-            writeErr("it contains no key values", i);
+            writeErr("it contains no key values", mLine);
         else
             mChains.push_back(mTempChain);
     }
@@ -29,20 +29,21 @@ std::vector<ListIChains> Analyzer::getListChain() noexcept {
     return mChains;
 }
 
-void Analyzer::analyzeLine(size_t line) {
+void Analyzer::analyzeLine() {
     auto binar = std::static_pointer_cast<BinarOperatorNode>(mTempRoot);
 
     switch (mTempRoot->getTokenDescriptor().tok) {
     case Token::dotdot:
         mTempChain.push_back(std::make_shared<ChainValueOperation>(binar->getRightOperandNode()->getTokenDescriptor().tok));
+        break;
     case Token::equal:
-        
+        analyzeEqual();
+        break;
     default:
-
         break;
     }
-    
+}
 
-    mTempChain;
+void Analyzer::analyzeEqual() {
 
 }

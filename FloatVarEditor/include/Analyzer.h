@@ -15,12 +15,12 @@ public:
     std::vector<ListIChains> getListChain() noexcept;
 
 private:
-    void analyzeLine(size_t line);
+    void analyzeLine();
+    void analyzeEqual();
 
     std::vector<ListIChains>    mChains;
     ListIChains                 mTempChain;
     RootNode                    mRoot;
     std::shared_ptr<ParentNode> mTempRoot;
-
 };
 

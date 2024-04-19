@@ -37,7 +37,6 @@ private:
 	RootNode mRoot;
 	std::vector<TokenDescriptor> mTokens;
 	size_t mCurrentPos = 0;
-	size_t mLines = 0;
 	bool mOptionConcadBracketToIndex = false;
 
 };

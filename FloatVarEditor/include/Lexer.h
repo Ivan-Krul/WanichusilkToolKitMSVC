@@ -36,7 +36,6 @@ private:
 	std::vector<size_t> countElements(const std::string& str, const std::string & sample);
 
 	std::string mCode;
-	size_t mLine = 0;
 	size_t mRow = 0;
 
 	bool mOptionClearSpacing = false;

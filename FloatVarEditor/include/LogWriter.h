@@ -14,13 +14,16 @@ public:
 
 protected:
     void clearLogs() noexcept;
-    void writeErr(const std::string& message, size_t line, bool except = false) noexcept;
+    void writeErr(const std::string& message, bool except = false) noexcept;
 
 private:
     std::vector<LogMessage> mLogMessages;
     std::string mClassName;
 
     bool mOptionOutputLogs = false;
+
+protected:
+    size_t mLine = 0;
 };
 
 
@@ -35,10 +38,11 @@ inline void LogWriter::setOptionOutputLogs() noexcept {
 
 inline void LogWriter::clearLogs() noexcept {
     mLogMessages.clear();
+    mLine = 0;
 }
 
-inline void LogWriter::writeErr(const std::string& message, size_t line, bool except) noexcept {
-    mLogMessages.push_back(LogMessage(except ? mClassName + ":Exception" : mClassName, "In " + std::to_string(line) + " active line " + message));
+inline void LogWriter::writeErr(const std::string& message, bool except) noexcept {
+    mLogMessages.push_back(LogMessage(except ? mClassName + ":Exception" : mClassName, "In " + std::to_string(mLine) + " active line " + message));
 }
 
 inline void LogWriter::outputLogs() noexcept {
