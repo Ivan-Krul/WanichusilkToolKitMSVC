@@ -62,3 +62,27 @@ std::vector<TokenDescriptor> doLexing(const std::string& scriptSrc) {
 
     return lexer.getListTokens();
 }
+
+RootNode doTreeAssembling(const std::vector<TokenDescriptor>& list) {
+    TreeAssembler tree_asm;
+    setLogWriterOn(tree_asm);
+
+    tree_asm.acceptTokenList(list)
+        .parse();
+
+    tree_asm.outputLogs();
+
+    return tree_asm.getRootNode();
+}
+
+std::vector<ListIChains> doAnalyzing(const RootNode& tree) {
+    Analyzer analyz;
+    setLogWriterOn(analyz);
+
+    analyz.acceptRootNode(tree)
+        .analyze();
+
+    analyz.outputLogs();
+
+    return analyz.getListChain();
+}
