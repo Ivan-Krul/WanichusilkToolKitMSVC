@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Analyzer.cpp" />
+    <ClCompile Include="src\ChainValue.cpp" />
     <ClCompile Include="src\Lexer.cpp" />
     <ClCompile Include="src\FloatVarEditor.cpp" />
     <ClCompile Include="src\LexerAdditional.cpp" />

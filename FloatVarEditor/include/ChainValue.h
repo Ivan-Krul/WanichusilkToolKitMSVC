@@ -12,7 +12,8 @@ struct IChainValue {
         function,
         string,
         number,
-        container
+        container,
+        binary_operator,
     };
 
     virtual TypeChain getType() const noexcept = 0;
@@ -43,47 +44,8 @@ public:
         Bool, Char, Short, Int, Unsign, Size, Float, Double
     };
 
-    ChainValueNumber(const std::string& value, const DataType predefinedType) {
-        mType = predefinedType;
-        mValid = true;
-        mValue = { 0 };
-
-        switch (mType) {
-        case DataType::Bool:   mValue.bol = value == "true";    break;
-        case DataType::Char:   mValue.chr = std::stoi(value);   break;
-        case DataType::Short:  mValue.shr = std::stoi(value);   break;
-        case DataType::Int:    mValue.in = std::stoi(value);   break;
-        case DataType::Unsign: mValue.un = std::stoul(value);  break;
-        case DataType::Size:   mValue.ull = std::stoull(value); break;
-        case DataType::Float:  mValue.flt = std::stof(value);   break;
-        case DataType::Double: mValue.dbl = std::stod(value);   break;
-        }
-    }
-    ChainValueNumber(const std::string& value) {
-        mValid = true;
-        mValue = { 0 };
-        mType = DataType::Bool;
-
-        if (value == "true" || value == "false") {
-            mType = DataType::Bool;
-            mValue.bol = value == "true";
-        } else if (value[0] == '.') {
-            mType = DataType::Float;
-            mValue.flt = std::stof(value);
-        } else if (isdigit(value[0])) { // if here would be -, then well, no offense
-            if (value.find('.') == value.npos) {
-                // int
-                mType = DataType::Int;
-                mValue.in = std::stoi(value);
-            } else {
-                mType = DataType::Float;
-                mValue.flt = std::stof(value);
-            }
-
-        } else {
-            mValid = false;
-        }
-    }
+    ChainValueNumber(const std::string& value, const DataType predefinedType);
+    ChainValueNumber(const std::string& value);
     inline TypeChain getType() const noexcept override {
         return TypeChain::number;
     }
@@ -132,7 +94,7 @@ public:
     }
 
     enum class Operation : char {
-        clear, read, write, pop, push
+        clear, read, write, pop, push, math
     };
 
     inline TypeChain getType() const noexcept override {
@@ -169,14 +131,25 @@ private:
 
 class ChainValueContainer : public IChainValue {
 public:
+    enum class Property {
+        none, binary, datatype, name, size
+    };
+
+    ChainValueContainer(const BinarOperatorNode& dotdotNode) {
+        mSelectedProperty = Property::none;
+        resolveIndexes(*std::static_pointer_cast<ElementNode, ParentNode>(dotdotNode.getRightOperandNode()));
+        setProperty(dotdotNode.getLeftOperandNode()->getTokenDescriptor().tok);
+    }
+
+    ChainValueContainer(const ElementNode& container, Property prop) {
+        mSelectedProperty = prop;
+        resolveIndexes(container);
+    }
+
     ChainValueContainer(const ElementNode& container) {
         mSelectedProperty = Property::none;
         resolveIndexes(container);
     }
-
-    enum class Property {
-        none, binary, datatype, name
-    };
 
     inline TypeChain getType() const noexcept override {
         return TypeChain::container;
@@ -190,27 +163,64 @@ public:
     }
 
 private:
-    void resolveIndexes(const ElementNode& container) {
-        std::shared_ptr<ParentNode> guts;
+    void resolveIndexes(const ElementNode& container);
 
-        for (size_t i = 0; i < container.getIndexSize(); i++) {
-            guts = container[i].getGutsNode();
-
-            switch (guts->getTokenDescriptor().tok) {
-            case Token::var_here:
-                mTrace.push_back(std::make_shared<ChainValueContainer>(*std::static_pointer_cast<ElementNode>(guts)));
-                break;
-            case Token::string:
-                mTrace.push_back(std::make_shared<ChainValueString>(guts->getTokenDescriptor().val));
-                break;
-            case Token::number:
-                mTrace.push_back(std::make_shared<ChainValueNumber>(guts->getTokenDescriptor().val));
-                break;
-            }
+    void setProperty(const Token tok) {
+        switch (tok) {
+        case Token::var_name:      mSelectedProperty = Property::name;     break;
+        case Token::var_binary:    mSelectedProperty = Property::binary;   break;
+        case Token::var_type:      mSelectedProperty = Property::datatype; break;
+        case Token::var_list_size: mSelectedProperty = Property::size;     break;
+        default:
+            break;
         }
     }
 
     ListIChains mTrace;
     Property    mSelectedProperty;
 
+};
+
+class ChainValueBinarOperand : public IChainValue {
+public:
+    enum class Operation {
+        equal, add, subtract, multiply, divide, modulo
+    };
+
+    ChainValueBinarOperand(const BinarOperatorNode& node) noexcept {
+        switch (node.getTokenDescriptor().tok) {
+        case Token::equal:   mOperationType = Operation::equal;    break;
+        case Token::plus:    mOperationType = Operation::add;      break;
+        case Token::minus:   mOperationType = Operation::subtract; break;
+        case Token::mult:    mOperationType = Operation::multiply; break;
+        case Token::divide:  mOperationType = Operation::divide;   break;
+        case Token::procent: mOperationType = Operation::modulo;   break;
+        }
+
+        setOperands(node);
+    }
+
+    Operation getOperationType() const noexcept {
+        return mOperationType;
+    }
+
+    inline TypeChain getType() const noexcept override {
+        return TypeChain::binary_operator;
+    }
+
+
+
+private:
+
+    void setOperands(const BinarOperatorNode& node) {
+        auto r_node = node.getRightOperandNode();
+        if (r_node->getTokenDescriptor().tok == Token::dotdot)
+            mRightOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<BinarOperatorNode>(r_node));
+        else if(r_node->getTokenDescriptor().tok == Token::var_here)
+            mRightOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<ElementNode>(r_node));
+    }
+
+    Operation                    mOperationType;
+    std::shared_ptr<IChainValue> mRightOperand;
+    std::shared_ptr<IChainValue> mLeftOperand;
 };

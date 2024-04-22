@@ -45,5 +45,5 @@ void Analyzer::analyzeLine() {
 }
 
 void Analyzer::analyzeEqual() {
-
+    
 }
