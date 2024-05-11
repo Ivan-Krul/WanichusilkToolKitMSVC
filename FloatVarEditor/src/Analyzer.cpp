@@ -30,11 +30,9 @@ std::vector<ListIChains> Analyzer::getListChain() noexcept {
 }
 
 void Analyzer::analyzeLine() {
-    auto binar = std::static_pointer_cast<BinarOperatorNode>(mTempRoot);
-
     switch (mTempRoot->getTokenDescriptor().tok) {
     case Token::dotdot:
-        mTempChain.push_back(std::make_shared<ChainValueOperation>(binar->getRightOperandNode()->getTokenDescriptor().tok));
+        mTempChain.push_back(std::make_shared<ChainValueOperation>(std::static_pointer_cast<BinarOperatorNode>(mTempRoot)->getRightOperandNode()->getTokenDescriptor().tok));
         break;
     case Token::equal:
         analyzeEqual();
@@ -45,5 +43,33 @@ void Analyzer::analyzeLine() {
 }
 
 void Analyzer::analyzeEqual() {
-    
+    auto binar = std::static_pointer_cast<BinarOperatorNode>(mTempRoot);
+    auto left = binar->getLeftOperandNode();
+
+    if (left->getTokenDescriptor().tok == Token::dotdot) {
+        auto left_bundle = std::static_pointer_cast<BinarOperatorNode>(left);
+        ChainValueContainer::Property prop;
+
+        switch (left_bundle->getRightOperandNode()->getTokenDescriptor().tok) {
+        case Token::var_binary:    prop = ChainValueContainer::Property::binary;   break;
+        case Token::var_name:      prop = ChainValueContainer::Property::name;     break;
+        case Token::var_type:      prop = ChainValueContainer::Property::datatype; break;
+        case Token::var_list_size: prop = ChainValueContainer::Property::size;     break;
+        }
+
+        mTempChain.push_back(std::make_shared<ChainValueContainer>(left_bundle->getLeftOperandNode(), prop));
+    }
+    else mTempChain.push_back(std::make_shared<ChainValueContainer>(left));
+
+    auto right = binar->getRightOperandNode();
+
+    switch (right->getTokenDescriptor().tok) {
+    case Token::var_here: // container
+    case Token::dotdot:   // container + property
+    case Token::atSign:   // math formula
+    case Token::number:   // number
+    case Token::string:   // string
+        break;
+    }
+
 }
