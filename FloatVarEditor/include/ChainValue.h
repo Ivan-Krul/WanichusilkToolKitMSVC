@@ -52,7 +52,7 @@ public:
     inline bool isValid() const noexcept {
         return mValid;
     }
-    inline DataType getDataType() {
+    inline DataType getDataType() const {
         return mType;
     }
     template <typename T>
@@ -208,17 +208,8 @@ public:
         return TypeChain::binary_operator;
     }
 
-
-
 private:
-
-    void setOperands(const BinarOperatorNode& node) {
-        auto r_node = node.getRightOperandNode();
-        if (r_node->getTokenDescriptor().tok == Token::dotdot)
-            mRightOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<BinarOperatorNode>(r_node));
-        else if(r_node->getTokenDescriptor().tok == Token::var_here)
-            mRightOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<ElementNode>(r_node));
-    }
+    void setOperands(const BinarOperatorNode& node);
 
     Operation                    mOperationType;
     std::shared_ptr<IChainValue> mRightOperand;

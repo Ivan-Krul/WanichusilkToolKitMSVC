@@ -16,7 +16,6 @@ public:
 
 private:
     void analyzeLine();
-    void analyzeEqual();
 
     std::vector<ListIChains>    mChains;
     ListIChains                 mTempChain;

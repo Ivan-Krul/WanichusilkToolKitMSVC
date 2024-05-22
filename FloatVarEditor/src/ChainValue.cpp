@@ -51,7 +51,7 @@ void ChainValueContainer::resolveIndexes(const ElementNode& container) {
 
         switch (guts->getTokenDescriptor().tok) {
         case Token::var_here:
-            mTrace.push_back(std::make_shared<ChainValueContainer>(*std::static_pointer_cast<ElementNode>(guts)));
+            mTrace.push_back(std::make_shared<ChainValueContainer>(*(std::static_pointer_cast<ElementNode>(guts).get())));
             break;
         case Token::string:
             mTrace.push_back(std::make_shared<ChainValueString>(guts->getTokenDescriptor().val));
@@ -60,5 +60,33 @@ void ChainValueContainer::resolveIndexes(const ElementNode& container) {
             mTrace.push_back(std::make_shared<ChainValueNumber>(guts->getTokenDescriptor().val));
             break;
         }
+    }
+}
+
+void ChainValueBinarOperand::setOperands(const BinarOperatorNode& node) {
+    auto l_node = node.getRightOperandNode();
+    if (l_node->getTokenDescriptor().tok == Token::dotdot)
+        mLeftOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<BinarOperatorNode>(l_node));
+    else if (l_node->getTokenDescriptor().tok == Token::var_here)
+        mLeftOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<ElementNode>(l_node));
+    else
+        throw std::exception((std::string(__FUNCTION__) + ": invalud object to assign").c_str());
+
+    auto r_node = node.getRightOperandNode();
+    switch (r_node->getTokenDescriptor().tok) {
+    case Token::var_here: // container
+        mRightOperand = std::make_shared<ChainValueContainer>(*(std::static_pointer_cast<ElementNode>(r_node).get()));
+        break;
+    case Token::dotdot:   // container + property
+        mRightOperand = std::make_shared<ChainValueContainer>(*(std::static_pointer_cast<BinarOperatorNode>(r_node).get()));
+        break;
+    case Token::number:   // number
+        mRightOperand = std::make_shared<ChainValueNumber>(r_node->getTokenDescriptor().val);
+        break;
+    case Token::string:   // string
+        mRightOperand = std::make_shared<ChainValueString>(r_node->getTokenDescriptor().val);
+        break;
+    case Token::atSign:   // math formula
+        throw std::exception("TODO: math");
     }
 }
