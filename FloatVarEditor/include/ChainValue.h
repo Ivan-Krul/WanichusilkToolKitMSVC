@@ -135,6 +135,22 @@ public:
         none, binary, datatype, name, size
     };
 
+    ChainValueContainer(const std::shared_ptr<ParentNode>& parent) {
+        mSelectedProperty = Property::none;
+        if (parent->getTokenDescriptor().tok == Token::dotdot) {
+            auto dotdot = std::static_pointer_cast<BinarOperatorNode, ParentNode>(parent);
+            resolveIndexes(*std::static_pointer_cast<ElementNode, ParentNode>(dotdot->getRightOperandNode()));
+            setProperty(dotdot->getLeftOperandNode()->getTokenDescriptor().tok);
+        }
+        else if (parent->getTokenDescriptor().tok == Token::var_here) {
+            auto elem = std::static_pointer_cast<ElementNode, ParentNode>(parent);
+            mSelectedProperty = Property::none;
+            resolveIndexes(*elem);
+        }
+        else
+            throw std::exception((std::string(__FUNCTION__) + ": invalud object to assign").c_str());
+    }
+
     ChainValueContainer(const BinarOperatorNode& dotdotNode) {
         mSelectedProperty = Property::none;
         resolveIndexes(*std::static_pointer_cast<ElementNode, ParentNode>(dotdotNode.getRightOperandNode()));

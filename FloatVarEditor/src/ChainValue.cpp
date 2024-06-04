@@ -64,21 +64,13 @@ void ChainValueContainer::resolveIndexes(const ElementNode& container) {
 }
 
 void ChainValueBinarOperand::setOperands(const BinarOperatorNode& node) {
-    auto l_node = node.getRightOperandNode();
-    if (l_node->getTokenDescriptor().tok == Token::dotdot)
-        mLeftOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<BinarOperatorNode>(l_node));
-    else if (l_node->getTokenDescriptor().tok == Token::var_here)
-        mLeftOperand = std::make_shared<ChainValueContainer>(std::static_pointer_cast<ElementNode>(l_node));
-    else
-        throw std::exception((std::string(__FUNCTION__) + ": invalud object to assign").c_str());
+    mLeftOperand = std::make_shared<ChainValueContainer>(node.getLeftOperandNode());
 
     auto r_node = node.getRightOperandNode();
     switch (r_node->getTokenDescriptor().tok) {
     case Token::var_here: // container
-        mRightOperand = std::make_shared<ChainValueContainer>(*(std::static_pointer_cast<ElementNode>(r_node).get()));
-        break;
     case Token::dotdot:   // container + property
-        mRightOperand = std::make_shared<ChainValueContainer>(*(std::static_pointer_cast<BinarOperatorNode>(r_node).get()));
+        mRightOperand = std::make_shared<ChainValueContainer>(r_node);
         break;
     case Token::number:   // number
         mRightOperand = std::make_shared<ChainValueNumber>(r_node->getTokenDescriptor().val);

@@ -90,6 +90,6 @@ enum class Token : char {
 };
 
 struct TokenDescriptor {
-	Token tok;
+	Token tok = Token::empty;
 	std::string val;
 };
