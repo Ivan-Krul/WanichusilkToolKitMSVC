@@ -11,6 +11,7 @@ Analyzer& Analyzer::analyze() {
 
     for (mLine = 0; mLine < root_array.size(); mLine++) {
         try {
+            mTempChain.clear();
             mTempRoot = root_array[mLine];
             analyzeLine();
         }

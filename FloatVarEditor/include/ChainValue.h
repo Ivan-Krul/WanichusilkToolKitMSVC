@@ -139,8 +139,9 @@ public:
         mSelectedProperty = Property::none;
         if (parent->getTokenDescriptor().tok == Token::dotdot) {
             auto dotdot = std::static_pointer_cast<BinarOperatorNode, ParentNode>(parent);
-            resolveIndexes(*std::static_pointer_cast<ElementNode, ParentNode>(dotdot->getRightOperandNode()));
-            setProperty(dotdot->getLeftOperandNode()->getTokenDescriptor().tok);
+            auto element = std::static_pointer_cast<ElementNode, ParentNode>(dotdot->getLeftOperandNode());
+            resolveIndexes(*element);
+            setProperty(dotdot->getRightOperandNode()->getTokenDescriptor().tok);
         }
         else if (parent->getTokenDescriptor().tok == Token::var_here) {
             auto elem = std::static_pointer_cast<ElementNode, ParentNode>(parent);
@@ -203,7 +204,7 @@ public:
         equal, add, subtract, multiply, divide, modulo
     };
 
-    ChainValueBinarOperand(const BinarOperatorNode& node) noexcept {
+    ChainValueBinarOperand(const BinarOperatorNode& node) {
         switch (node.getTokenDescriptor().tok) {
         case Token::equal:   mOperationType = Operation::equal;    break;
         case Token::plus:    mOperationType = Operation::add;      break;

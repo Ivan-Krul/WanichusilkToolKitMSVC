@@ -7,6 +7,8 @@
 
 #include "MainConveyor.h"
 
+#define GET_CODE_PARTION(Variable) (#Variable)
+
 int main(int args, char** argv)
 {
     checkSource(args);
@@ -28,6 +30,14 @@ int main(int args, char** argv)
 
     auto tree = doTreeAssembling(list);
     auto chain = doAnalyzing(tree);
+
+    std::cout << "All chains:\n";
+    for (size_t i = 0; i < chain.size(); i++) {
+        std::cout << i << ":\t\"" << chain[i].size() << "\"\n";
+        for (size_t c = 0; c < chain[i].size(); c++) {
+            std::cout <<'\t' << c << ":\t\"" << (int)chain[i][c]->getType() << "\"\n";
+        }
+    }
 
     return 0;
 }
