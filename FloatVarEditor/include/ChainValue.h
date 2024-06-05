@@ -149,7 +149,7 @@ public:
             resolveIndexes(*elem);
         }
         else
-            throw std::exception((std::string(__FUNCTION__) + ": invalud object to assign").c_str());
+            throw std::exception((std::string(__FUNCTION__) + ": invalid object to assign").c_str());
     }
 
     ChainValueContainer(const BinarOperatorNode& dotdotNode) {
@@ -219,6 +219,14 @@ public:
 
     Operation getOperationType() const noexcept {
         return mOperationType;
+    }
+
+    std::shared_ptr<IChainValue> getRightOperand() noexcept {
+        return mRightOperand;
+    }
+
+    std::shared_ptr<IChainValue> getLeftOperand() noexcept {
+        return mLeftOperand;
     }
 
     inline TypeChain getType() const noexcept override {

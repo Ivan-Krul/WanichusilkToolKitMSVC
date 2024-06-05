@@ -1,28 +1,28 @@
 #pragma once
 
 #include "FloatVar.h"
-#include "NodeMain.h"
-#include "LogMessage.h"
+#include "ChainValue.h"
+#include "LogWriter.h"
 
-class Executor {
+class Executor : public LogWriter {
     using FloatVar       = float_var_container_lib::FloatVar;
-    using ParentNodeList = std::vector<std::shared_ptr<ParentNode>>;
 
 public:
-    Executor& getRootNode(const RootNode& root) noexcept;
+    Executor() noexcept : LogWriter("Executor") {}
+
+    Executor& getChains(const ListIChains& chains) noexcept;
     void      run();
 
 private:
-    void runEqual();
-    bool isVariableProperty(const BinarOperatorNode& variable);
-    bool isPropertyConverted(const BinarOperatorNode& variable);
-     
-    void writeLog(const std::string& message);
 
-    size_t         mLine;
-    FloatVar       mMain;
-    ParentNodeList mNodes;
+    void runChain();
 
-    std::vector<LogMessage> mLogMessages;
+    void runBinaryOperand();
+    FloatVar* getContainerTarget(const std::shared_ptr<ChainValueBinarOperand>& equalChain);
+
+    void runFunction();
+
+    FloatVar    mMain;
+    ListIChains mChains;
 };
 

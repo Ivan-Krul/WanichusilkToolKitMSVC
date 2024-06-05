@@ -1,64 +1,79 @@
 #include "Executor.h"
 
-Executor& Executor::getRootNode(const RootNode& root) noexcept {
-    mNodes = root.getArray();
-    mLine = 0;
-	mMain = FloatVar();
+Executor& Executor::getChains(const ListIChains& chains) noexcept {
+    mChains = chains;
     return *this;
 }
 
 void Executor::run() {
-	switch (mNodes[mLine]->getTokenDescriptor().tok) {
-	case Token::equal:
-		runEqual();
-	case Token::dotdot:
-	default:
-		break;
-	}
-	mLine++;
+    mMain = FloatVar();
+
+    for (mLine = 0; mLine < mChains.size(); mLine++) {
+        try {
+            runChain();
+        } catch (const std::exception& exc) {
+            writeErr("something went wrong : " + std::string(exc.what()), true);
+            return;
+        }
+    }
 }
 
-void Executor::runEqual() {
-	auto current_line = *std::static_pointer_cast<BinarOperatorNode>(mNodes[mLine]);
+void Executor::runChain() {
+    auto& chain = mChains[mLine];
 
-	if (!isVariableProperty(*std::static_pointer_cast<BinarOperatorNode>(current_line.getLeftOperandNode()))) {
-		writeLog("is function, but not variable");
-		// ???
-	}
+    switch (chain->getType()) {
+    case IChainValue::TypeChain::number:
+        writeErr("number is in uncertant place");    break;
+    case IChainValue::TypeChain::string:
+        writeErr("string is in uncertant place");    break;
+    case IChainValue::TypeChain::container:
+        writeErr("container is in uncertant place"); break;
+    case IChainValue::TypeChain::binary_operator:
+        runBinaryOperand();                          break;
+    case IChainValue::TypeChain::function:
+        runFunction();
+    }
+}
 
+void Executor::runBinaryOperand() {
+    auto binarChain = std::static_pointer_cast<ChainValueBinarOperand, IChainValue>(mChains[mLine]);
+
+    if (binarChain->getOperationType() != ChainValueBinarOperand::Operation::equal)
+        throw std::exception((std::string(__FUNCTION__) + ": isn't equal").c_str());
+
+    auto p_fv_target = getContainerTarget(binarChain);
 
 }
 
-bool Executor::isVariableProperty(const BinarOperatorNode& variable) {
-	if (isPropertyConverted(variable))
-		return true;
+float_var_container_lib::FloatVar* Executor::getContainerTarget(const std::shared_ptr<ChainValueBinarOperand>& equalChain) {
+    auto container = std::static_pointer_cast<ChainValueContainer>(equalChain->getLeftOperand());
+    auto trace = container->getTrace();
 
-	switch (variable.getRightOperandNode()->getTokenDescriptor().tok) {
-	case Token::var_binary:
-	case Token::var_name:
-	case Token::var_type:
-		return true;
-	default:
-		return false;
-	}
-}
+    FloatVar* p_fv_target = &mMain;
 
-bool Executor::isPropertyConverted(const BinarOperatorNode& variable) {
-	switch (variable.getRightOperandNode()->getTokenDescriptor().tok) {
-	case Token::convert_toBool:
-	case Token::convert_toChar:
-	case Token::convert_toShort:
-	case Token::convert_toInt:
-	case Token::convert_toUnsignedInt:
-	case Token::convert_toFloat:
-	case Token::convert_toDouble:
-	case Token::convert_toSize:
-		return true;
-	default:
-		return false;
-	}
-}
+    for (size_t t = 0; t < trace.size(); t++) {
+        switch (trace[t]->getType()) {
+        case IChainValue::TypeChain::number:
+        {
+            auto number = std::static_pointer_cast<ChainValueNumber>(trace[t]);
+            if(number->getDataType() == ChainValueNumber::DataType::Double || number->getDataType() == ChainValueNumber::DataType::Float)
+                throw std::exception((std::string(__FUNCTION__) + ": indexing with number has to be only in integer numbers in range [0 - inf)").c_str());
 
-void Executor::writeLog(const std::string& message) {
-	mLogMessages.push_back(LogMessage("Executor", "In active line " + std::to_string(mLine) + ", " + message));
+            p_fv_target = &(p_fv_target->list[number->getValue<uint64_t>()]);
+        } break;
+        case IChainValue::TypeChain::string:
+        {
+            auto string = std::static_pointer_cast<ChainValueString>(trace[t])->getValue();
+            auto iter = std::find_if(p_fv_target->list.begin(), p_fv_target->list.end(), [=](const decltype(p_fv_target->list.begin())& value) { return value->name == string; });
+
+            if(iter == p_fv_target->list.end())
+                throw std::exception((std::string(__FUNCTION__) + ": index with string like \""+string+"\" wasn't found").c_str());
+
+            p_fv_target = &(*iter);
+        } break;
+        case IChainValue::TypeChain::
+        }
+    }
+
+    return p_fv_target;
 }
