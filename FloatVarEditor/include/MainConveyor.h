@@ -75,7 +75,7 @@ RootNode doTreeAssembling(const std::vector<TokenDescriptor>& list) {
     return tree_asm.getRootNode();
 }
 
-std::vector<ListIChains> doAnalyzing(const RootNode& tree) {
+ListIChains doAnalyzing(const RootNode& tree) {
     Analyzer analyz;
     setLogWriterOn(analyz);
 

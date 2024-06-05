@@ -12,14 +12,14 @@ public:
 
     Analyzer& acceptRootNode(RootNode root) noexcept;
     Analyzer& analyze();
-    std::vector<ListIChains> getListChain() noexcept;
+    ListIChains getListChain() noexcept;
 
 private:
     void analyzeLine();
 
-    std::vector<ListIChains>    mChains;
-    ListIChains                 mTempChain;
-    RootNode                    mRoot;
-    std::shared_ptr<ParentNode> mTempRoot;
+    ListIChains                  mChains;
+    std::shared_ptr<IChainValue> mTempChain;
+    RootNode                     mRoot;
+    std::shared_ptr<ParentNode>  mTempRoot;
 };
 

@@ -33,10 +33,7 @@ int main(int args, char** argv)
 
     std::cout << "All chains:\n";
     for (size_t i = 0; i < chain.size(); i++) {
-        std::cout << i << ":\t\"" << chain[i].size() << "\"\n";
-        for (size_t c = 0; c < chain[i].size(); c++) {
-            std::cout <<'\t' << c << ":\t\"" << (int)chain[i][c]->getType() << "\"\n";
-        }
+        std::cout << i << ":\t\"" << (int)chain[i]->getType() << "\"\n";
     }
 
     return 0;
