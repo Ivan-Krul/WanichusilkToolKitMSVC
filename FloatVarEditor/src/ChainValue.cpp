@@ -1,7 +1,9 @@
 #include "ChainValue.h"
 
-ChainValueNumber::ChainValueNumber(const std::string& value, const DataType predefinedType) {
+ChainValueNumber::ChainValueNumber(const std::string& value, const DataType predefinedType) :
+    mValue{ 0 } {
     mType = predefinedType;
+    mResolved = true;
     mValid = true;
     mValue = { 0 };
 
@@ -17,9 +19,10 @@ ChainValueNumber::ChainValueNumber(const std::string& value, const DataType pred
     }
 }
 
-ChainValueNumber::ChainValueNumber(const std::string& value) {
+ChainValueNumber::ChainValueNumber(const std::string& value) :
+    mValue{ 0 } {
     mValid = true;
-    mValue = { 0 };
+    mResolved = true;
     mType = DataType::Bool;
 
     if (value == "true" || value == "false") {
@@ -42,6 +45,35 @@ ChainValueNumber::ChainValueNumber(const std::string& value) {
         mValid = false;
     }
 }
+
+ChainValueNumber::ChainValueNumber(const std::shared_ptr<IChainValue>& chain, const DataType type) :
+    mValue{ 0 } {
+        mValid = true;
+        mType = type;
+        mResolved = false;
+        mUnresolvedChain = chain;
+}
+
+ChainValueNumber::ChainValueNumber(const std::shared_ptr<BinarOperatorNode>& chain) :
+    mValue{ 0 } {
+    mValid = true;
+    mResolved = false;
+    mType = DataType::Bool;
+
+    switch (chain->getRightOperandNode()->getTokenDescriptor().tok) {
+    case Token::convert_toBool: mType = DataType::Bool; break;
+    case Token::convert_toChar: mType = DataType::Char; break;
+    case Token::convert_toShort: mType = DataType::Short; break;
+    case Token::convert_toInt: mType = DataType::Int; break;
+    case Token::convert_toUnsignedInt: mType = DataType::Unsign; break;
+    case Token::convert_toFloat: mType = DataType::Float; break;
+    case Token::convert_toSize: mType = DataType::Size; break;
+    case Token::convert_toDouble: mType = DataType::Double; break;
+    }
+
+    mUnresolvedChain = std::make_shared<ChainValueContainer>(chain->getLeftOperandNode());
+}
+
 
 void ChainValueContainer::resolveIndexes(const ElementNode& container) {
     std::shared_ptr<ParentNode> guts;

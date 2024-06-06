@@ -41,12 +41,11 @@ void Executor::runBinaryOperand() {
     if (binarChain->getOperationType() != ChainValueBinarOperand::Operation::equal)
         throw std::exception((std::string(__FUNCTION__) + ": isn't equal").c_str());
 
-    auto p_fv_target = getContainerTarget(binarChain);
+    auto p_fv_target = getContainerTarget(std::static_pointer_cast<ChainValueContainer>(binarChain->getLeftOperand()));
 
 }
 
-float_var_container_lib::FloatVar* Executor::getContainerTarget(const std::shared_ptr<ChainValueBinarOperand>& equalChain) {
-    auto container = std::static_pointer_cast<ChainValueContainer>(equalChain->getLeftOperand());
+float_var_container_lib::FloatVar* Executor::getContainerTarget(const std::shared_ptr<ChainValueContainer>& container) {
     auto trace = container->getTrace();
 
     FloatVar* p_fv_target = &mMain;
@@ -56,10 +55,14 @@ float_var_container_lib::FloatVar* Executor::getContainerTarget(const std::share
         case IChainValue::TypeChain::number:
         {
             auto number = std::static_pointer_cast<ChainValueNumber>(trace[t]);
-            if(number->getDataType() == ChainValueNumber::DataType::Double || number->getDataType() == ChainValueNumber::DataType::Float)
-                throw std::exception((std::string(__FUNCTION__) + ": indexing with number has to be only in integer numbers in range [0 - inf)").c_str());
+            if (number->isResolved()) {
+                if (number->isValid())
+                    throw std::exception((std::string(__FUNCTION__) + ": number for indexing for is invalid").c_str());
+                if (number->getDataType() == ChainValueNumber::DataType::Double || number->getDataType() == ChainValueNumber::DataType::Float)
+                    throw std::exception((std::string(__FUNCTION__) + ": indexing with number has to be only in integer numbers in range [0 - inf)").c_str());
 
-            p_fv_target = &(p_fv_target->list[number->getValue<uint64_t>()]);
+                p_fv_target = &(p_fv_target->list[number->getValue<uint64_t>()]);
+            } else std::exception("TODO: handling for unresolved number to get container");
         } break;
         case IChainValue::TypeChain::string:
         {
@@ -71,7 +74,20 @@ float_var_container_lib::FloatVar* Executor::getContainerTarget(const std::share
 
             p_fv_target = &(*iter);
         } break;
-        case IChainValue::TypeChain::
+        case IChainValue::TypeChain::container:
+        {
+            auto container = std::static_pointer_cast<ChainValueContainer>(trace[t]);
+            if(container->getPropertySelection() == ChainValueContainer::Property::none)
+                throw std::exception((std::string(__FUNCTION__) + ": indexing with container itself impossible").c_str());
+
+            auto cont = getContainerTarget(container);
+
+            switch (container->getPropertySelection()) {
+            case ChainValueContainer::Property::binary: // Write function to take a string and pointer to container, and copy/paste from IChainValue::TypeChain::string
+            default:
+                break;
+            }
+        }
         }
     }
 

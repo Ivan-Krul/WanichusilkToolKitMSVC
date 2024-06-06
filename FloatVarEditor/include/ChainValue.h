@@ -13,7 +13,7 @@ struct IChainValue {
         string,
         number,
         container,
-        binary_operator,
+        binary_operator
     };
 
     virtual TypeChain getType() const noexcept = 0;
@@ -46,30 +46,44 @@ public:
 
     ChainValueNumber(const std::string& value, const DataType predefinedType);
     ChainValueNumber(const std::string& value);
+    ChainValueNumber(const std::shared_ptr<IChainValue>& chain, const DataType type);
+    ChainValueNumber(const std::shared_ptr<BinarOperatorNode>& chain);
+
     inline TypeChain getType() const noexcept override {
         return TypeChain::number;
     }
     inline bool isValid() const noexcept {
         return mValid;
     }
+    inline bool isResolved() const noexcept {
+        return mResolved;
+    }
     inline DataType getDataType() const {
         return mType;
     }
     template <typename T>
     inline std::enable_if_t<std::is_arithmetic_v<T>, T> getValue() const noexcept {
-        switch (sizeof(T)) {
-        case 1: return mValue.chr;
-        case 2: return mValue.shr;
-        case 4: return mValue.in;
-        case 8: return mValue.ull;
-        }
+        if (mResolved) {
+            switch (sizeof(T)) {
+            case 1: return mValue.chr;
+            case 2: return mValue.shr;
+            case 4: return mValue.in;
+            case 8: return mValue.ull;
+            }
+        } else
+            return 0;
+    }
+    inline std::shared_ptr<IChainValue> getUnresolvedChain() const noexcept {
+        return mUnresolvedChain;
     }
 
 private:
 
     DataType     mType;
     bool         mValid;
+    bool         mResolved;
 
+    std::shared_ptr<IChainValue> mUnresolvedChain;
     union NumericValueUnion {
         bool     bol;
         char     chr;
