@@ -18,7 +18,9 @@ private:
     void runChain();
 
     void runBinaryOperand();
-    FloatVar* getContainerTarget(const std::shared_ptr<ChainValueContainer>& container;
+    FloatVar* getContainerTarget(const std::shared_ptr<ChainValueContainer>& container);
+    void pointToElementTargetWithString(FloatVar* p_target, const std::string& index_name);
+    void pointToElementTargetWithNumber(FloatVar* p_target, const std::shared_ptr<ChainValueNumber>& number);
 
     void runFunction();
 
