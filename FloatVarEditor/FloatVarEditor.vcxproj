@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ChainContainerTarget.cpp" />
     <ClCompile Include="src\Analyzer.cpp" />
     <ClCompile Include="src\ChainValue.cpp" />
     <ClCompile Include="src\Executor.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="src\TreeAssemblerMath.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ChainContainerTarget.h" />
     <ClInclude Include="include\Analyzer.h" />
     <ClInclude Include="include\ChainValue.h" />
     <ClInclude Include="include\Executor.h" />
