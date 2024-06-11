@@ -65,7 +65,8 @@ ChainContainerTarget::FloatVar* ChainContainerTarget::traceTargetContainerPtrRaw
 }
 
 void ChainContainerTarget::pointToElementTargetWithString(FloatVar* p_target, const std::string& index_name) {
-    auto iter = std::find_if(p_target->list.begin(), p_target->list.end(), [=](const decltype(p_target->list.begin())& value) { return value->name == index_name; });
+    auto search = [&index_name](decltype(*(p_target->list.begin())) value) { return value.name == index_name; };
+    auto iter = std::find_if(p_target->list.begin(), p_target->list.end(), search);
 
     if (iter == p_target->list.end())
         throw std::exception((std::string(__FUNCTION__) + ": index with string like \"" + index_name + "\" wasn't found").c_str());

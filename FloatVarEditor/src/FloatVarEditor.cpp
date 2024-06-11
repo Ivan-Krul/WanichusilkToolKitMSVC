@@ -4,6 +4,7 @@
 #include "Lexer.h"
 #include "TreeAssembler.h"
 #include "Analyzer.h"
+#include "Executor.h"
 
 #include "MainConveyor.h"
 
@@ -35,6 +36,10 @@ int main(int args, char** argv)
     for (size_t i = 0; i < chain.size(); i++) {
         std::cout << i << ":\t\"" << (int)chain[i]->getType() << "\"\n";
     }
+
+    Executor e;
+    e.outputLogs();
+        e.getChains(chain).run();
 
     return 0;
 }

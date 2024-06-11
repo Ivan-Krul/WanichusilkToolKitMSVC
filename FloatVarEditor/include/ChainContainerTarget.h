@@ -28,9 +28,9 @@ private:
     FloatVar* pOriginContainer = nullptr;
     FloatVar* pTargetContainer = nullptr;
 
-    ChainValueContainer::Property mProperty;
+    ChainValueContainer::Property mProperty = ChainValueContainer::Property::none;
     bool mIsConverted = false;
-    ChainValueNumber::DataType mDataType;
+    ChainValueNumber::DataType mDataType = ChainValueNumber::DataType::Int;
 };
 
 template<typename T>

@@ -19,6 +19,7 @@ private:
     void runChain();
 
     void runBinaryOperand();
+    void assignString(ChainContainerTarget& target, const std::string& value);
 
     void runFunction();
 
