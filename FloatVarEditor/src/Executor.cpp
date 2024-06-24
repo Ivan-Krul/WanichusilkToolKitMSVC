@@ -52,7 +52,7 @@ void Executor::runBinaryOperand() {
     // assign
     switch (binarChain->getRightOperand()->getType()) {
     case IChainValue::TypeChain::string:
-        assignString(target, std::static_pointer_cast<ChainValueString>(binarChain->getRightOperand())->getValue());
+        assignFromString(target, std::static_pointer_cast<ChainValueString>(binarChain->getRightOperand())->getValue(), set_binary | set_name | set_datatype);
         break;
     case IChainValue::TypeChain::number:
     {
@@ -117,6 +117,17 @@ void Executor::runBinaryOperand() {
                 throw std::exception((std::string(__FUNCTION__) + ": you can't assign raw number as datatype").c_str());
             }
         case ChainValueContainer::Property::binary:
+            if (target.isConverted())
+                throw std::exception("TODO: convertion handling for binary containers");
+
+            switch (assignedFrom.getProperty()) {
+            case ChainValueContainer::Property::binary:   target.getTarget()->binary = assignedFrom.getTarget()->binary;      break;
+            case ChainValueContainer::Property::name:     target.getTarget()->binary = assignedFrom.getTarget()->name;        break;
+            case ChainValueContainer::Property::datatype: target.getTarget()->binary = assignedFrom.getTarget()->data_type;   break;
+            case ChainValueContainer::Property::size:     target.getTarget()->binary = assignedFrom.getTarget()->list.size(); break;
+            case ChainValueContainer::Property::none:
+                throw std::exception((std::string(__FUNCTION__) + ": you can't assign raw number as datatype").c_str());
+            }
         }
     }
     }
@@ -131,20 +142,69 @@ void Executor::runBinaryOperand() {
     // it's useful I think
 }
 
-void Executor::assignString(ChainContainerTarget& target, const std::string& value) {
+void Executor::assignContainer(ChainContainerTarget& target, ChainContainerTarget& value, const std::bitset<bits_count>& flagsToAssign) {
     switch (target.getProperty()) {
     case ChainValueContainer::Property::binary:
+        break;
+    case ChainValueContainer::Property::name:
+    case ChainValueContainer::Property::datatype:
+    case ChainValueContainer::Property::size:
+    case ChainValueContainer::Property::none:
+        break;
+
+    }
+}
+
+void Executor::assignFromString(ChainContainerTarget& target, const std::string& value, const std::bitset<bits_count>& flagsToAssign) {
+    if (flagsToAssign.count() == 0)
+        throw std::exception((std::string(__FUNCTION__) + ": all bitset flags are set to 0").c_str());
+
+    switch (target.getProperty()) {
+    case ChainValueContainer::Property::binary:
+        if (!flagsToAssign[get_binary])
+            throw std::exception((std::string(__FUNCTION__) + ": you can't set binary by assigning string").c_str());
         target.getTarget()->binary = value;
         break;
     case ChainValueContainer::Property::name:
+        if (!flagsToAssign[get_name])
+            throw std::exception((std::string(__FUNCTION__) + ": you can't set name by assigning string").c_str());
         target.getTarget()->name = value;
         break;
     case ChainValueContainer::Property::datatype:
+        if (!flagsToAssign[get_datatype])
+            throw std::exception((std::string(__FUNCTION__) + ": you can't set datatype by assigning string").c_str());
         memcpy(target.getTarget()->data_type, value.c_str(), 4);
         break;
     case ChainValueContainer::Property::size:
         throw std::exception((std::string(__FUNCTION__) + ": you can't manually set size by assigning string").c_str());
     case ChainValueContainer::Property::none:
         throw std::exception((std::string(__FUNCTION__) + ": you can't manually set container itself by assigning string").c_str());
+    }
+}
+
+void Executor::assignToString(std::string& target, ChainContainerTarget& value, const std::bitset<bits_count>& flagsToAssign) {
+    if (flagsToAssign.count() == 0)
+        throw std::exception((std::string(__FUNCTION__) + ": all bitset flags are set to 0").c_str());
+
+    switch (value.getProperty()) {
+    case ChainValueContainer::Property::binary:
+        if (!flagsToAssign[get_binary])
+            throw std::exception((std::string(__FUNCTION__) + ": you can't assign from binary").c_str());
+        target = value.getTarget()->binary;
+        break;
+    case ChainValueContainer::Property::name:
+        if (!flagsToAssign[get_name])
+            throw std::exception((std::string(__FUNCTION__) + ": you can't assign from name").c_str());
+        target = value.getTarget()->name;
+        break;
+    case ChainValueContainer::Property::datatype:
+        if (!flagsToAssign[get_datatype])
+            throw std::exception((std::string(__FUNCTION__) + ": you can't assign from datatype").c_str());
+        target = value.getTarget()->data_type;
+        break;
+    case ChainValueContainer::Property::size:
+        throw std::exception((std::string(__FUNCTION__) + ": you can't assign size of number as raw to string").c_str());
+    case ChainValueContainer::Property::none:
+        throw std::exception((std::string(__FUNCTION__) + ": you can't manually set string by assigning container itself").c_str());
     }
 }

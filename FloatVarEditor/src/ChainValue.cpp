@@ -75,6 +75,21 @@ ChainValueNumber::ChainValueNumber(const std::shared_ptr<BinarOperatorNode>& cha
 }
 
 
+ChainValueContainer::ChainValueContainer(const std::shared_ptr<ParentNode>& parent) {
+    mSelectedProperty = Property::none;
+    if (parent->getTokenDescriptor().tok == Token::dotdot) {
+        auto dotdot = std::static_pointer_cast<BinarOperatorNode, ParentNode>(parent);
+        auto element = std::static_pointer_cast<ElementNode, ParentNode>(dotdot->getLeftOperandNode());
+        resolveIndexes(*element);
+        setProperty(dotdot->getRightOperandNode()->getTokenDescriptor().tok);
+    } else if (parent->getTokenDescriptor().tok == Token::var_here) {
+        auto elem = std::static_pointer_cast<ElementNode, ParentNode>(parent);
+        mSelectedProperty = Property::none;
+        resolveIndexes(*elem);
+    } else
+        throw std::exception((std::string(__FUNCTION__) + ": invalid object to assign").c_str());
+}
+
 void ChainValueContainer::resolveIndexes(const ElementNode& container) {
     std::shared_ptr<ParentNode> guts;
 
@@ -112,5 +127,21 @@ void ChainValueBinarOperand::setOperands(const BinarOperatorNode& node) {
         break;
     case Token::atSign:   // math formula
         throw std::exception("TODO: math");
+    }
+}
+
+std::string ChainValueString::getValueFromNumber() const noexcept {
+    if(!mNumberChain.isResolved())
+        return std::string();
+
+    switch (mNumberChain.getDataType()) {
+    case ChainValueNumber::DataType::Bool:   return mNumberChain.getValue<bool>() ? "true" : "false";
+    case ChainValueNumber::DataType::Char:   return std::string() = mNumberChain.getValue<char>();
+    case ChainValueNumber::DataType::Short:  return std::to_string(mNumberChain.getValue<short>());
+    case ChainValueNumber::DataType::Int:    return std::to_string(mNumberChain.getValue<int>());
+    case ChainValueNumber::DataType::Unsign: return std::to_string(mNumberChain.getValue<unsigned>());
+    case ChainValueNumber::DataType::Size:   return std::to_string(mNumberChain.getValue<uint64_t>());
+    case ChainValueNumber::DataType::Float:  return std::to_string(mNumberChain.getValue<float>());
+    case ChainValueNumber::DataType::Double: return std::to_string(mNumberChain.getValue<double>());
     }
 }

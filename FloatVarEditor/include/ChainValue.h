@@ -35,6 +35,9 @@ public:
 private:
 
     std::string mValue;
+    bool        mIsConvertedFrom;
+    ChainValueNumber* pNumberChain;
+
 };
 
 
@@ -65,10 +68,10 @@ public:
     inline std::enable_if_t<std::is_arithmetic_v<T>, T> getValue() const noexcept {
         if (mResolved) {
             switch (sizeof(T)) {
-            case 1: return mValue.chr;
-            case 2: return mValue.shr;
-            case 4: return mValue.in;
-            case 8: return mValue.ull;
+            case 1: return reinterpret_cast<T>(mValue.chr);
+            case 2: return reinterpret_cast<T>(mValue.shr);
+            case 4: return reinterpret_cast<T>(mValue.in);
+            case 8: return reinterpret_cast<T>(mValue.ull);
             }
         } else
             return 0;
@@ -94,6 +97,34 @@ private:
         float    flt;
         double   dbl;
     }            mValue;
+};
+
+
+class ChainValueString : public IChainValue {
+public:
+    inline ChainValueString(const std::string& value) noexcept : mNumberChain("0") {
+        mValue = value;
+        mIsConvertedFrom = false;
+    }
+    inline ChainValueString(const ChainValueNumber& number) noexcept : mNumberChain("0") {
+        mNumberChain = number;
+        mIsConvertedFrom = true;
+    }
+    inline TypeChain getType() const noexcept override {
+        return TypeChain::string;
+    }
+    inline std::string getValue() const noexcept {
+        return mValue;
+    }
+    inline bool isConvertedFrom() const noexcept { return mIsConvertedFrom; }
+    std::string getValueFromNumber() const noexcept;
+
+private:
+
+    std::string      mValue;
+    bool             mIsConvertedFrom;
+    ChainValueNumber mNumberChain;
+
 };
 
 
@@ -149,22 +180,7 @@ public:
         none, binary, datatype, name, size
     };
 
-    ChainValueContainer(const std::shared_ptr<ParentNode>& parent) {
-        mSelectedProperty = Property::none;
-        if (parent->getTokenDescriptor().tok == Token::dotdot) {
-            auto dotdot = std::static_pointer_cast<BinarOperatorNode, ParentNode>(parent);
-            auto element = std::static_pointer_cast<ElementNode, ParentNode>(dotdot->getLeftOperandNode());
-            resolveIndexes(*element);
-            setProperty(dotdot->getRightOperandNode()->getTokenDescriptor().tok);
-        }
-        else if (parent->getTokenDescriptor().tok == Token::var_here) {
-            auto elem = std::static_pointer_cast<ElementNode, ParentNode>(parent);
-            mSelectedProperty = Property::none;
-            resolveIndexes(*elem);
-        }
-        else
-            throw std::exception((std::string(__FUNCTION__) + ": invalid object to assign").c_str());
-    }
+    ChainValueContainer(const std::shared_ptr<ParentNode>& parent);
 
     ChainValueContainer(const BinarOperatorNode& dotdotNode) {
         mSelectedProperty = Property::none;

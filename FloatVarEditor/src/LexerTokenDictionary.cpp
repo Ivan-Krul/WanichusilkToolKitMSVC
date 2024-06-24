@@ -44,6 +44,7 @@ decltype(Lexer::sTokenDictionary) Lexer::sTokenDictionary = {
 	{"toUnsigned", Token::convert_toUnsignedInt},
 	{"toDouble",   Token::convert_toDouble},
 	{"toSize",     Token::convert_toSize},
+	{"toString",     Token::convert_toString},
 
 	{"size", Token::var_list_size},
 

@@ -38,6 +38,7 @@ std::shared_ptr<ParentNode> TreeAssembler::parseToken_DotDotCheckCaseDotDot() {
     case Token::convert_toFloat:
     case Token::convert_toSize:
     case Token::convert_toDouble:
+    case Token::convert_toString:
         return std::make_shared<ConvertNode>(mTokens[mCurrentPos]);
     case Token::var_write:
         return std::make_shared<ActionNode>(mTokens[mCurrentPos]);

@@ -31,6 +31,7 @@ enum class Token : char {
 	convert_toFloat,
 	convert_toDouble,
 	convert_toSize,
+	convert_toString,
 
 	bool_true,
 	bool_false,
