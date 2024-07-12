@@ -61,7 +61,6 @@ void Executor::runBinaryOperand() {
         switch (target.getProperty()) {
         case ChainValueContainer::Property::binary:
             target.getTarget()->setBinaryValue(number.getValue<uint64_t>());
-            //target.getTarget()->;
             break;
         case ChainValueContainer::Property::name:
             throw std::exception((std::string(__FUNCTION__) + ": you can't name the container by raw number").c_str());
@@ -142,17 +141,7 @@ void Executor::runBinaryOperand() {
     // it's useful I think
 }
 
-void Executor::assignContainer(ChainContainerTarget& target, ChainContainerTarget& value, const std::bitset<bits_count>& flagsToAssign) {
-    switch (target.getProperty()) {
-    case ChainValueContainer::Property::binary:
-        break;
-    case ChainValueContainer::Property::name:
-    case ChainValueContainer::Property::datatype:
-    case ChainValueContainer::Property::size:
-    case ChainValueContainer::Property::none:
-        break;
-
-    }
+void Executor::assingContainerts(ChainContainerTarget& target, const ChainContainerTarget& origin, const std::bitset<bits_count>& flagsToAssign) {
 }
 
 void Executor::assignFromString(ChainContainerTarget& target, const std::string& value, const std::bitset<bits_count>& flagsToAssign) {

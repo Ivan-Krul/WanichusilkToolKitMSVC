@@ -39,7 +39,7 @@ private:
     void runChain();
 
     void runBinaryOperand();
-    void assignContainer(ChainContainerTarget & target, ChainContainerTarget & value, const std::bitset<bits_count>& flagsToAssign);
+    void assingContainerts(ChainContainerTarget& target, const ChainContainerTarget& origin, const std::bitset<bits_count>& flagsToAssign);
     void assignFromString(ChainContainerTarget& target, const std::string& value, const std::bitset<bits_count>& flagsToAssign);
     void assignToString(std::string& target, ChainContainerTarget& value, const std::bitset<bits_count>& flagsToAssign);
 

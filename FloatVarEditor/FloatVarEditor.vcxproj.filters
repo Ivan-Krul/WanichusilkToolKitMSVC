@@ -99,5 +99,6 @@
     <None Include="examples\#4 file_transference.fvs" />
     <None Include="examples\#5 indexing.fvs" />
     <None Include="examples\#6 math_operations.fvs" />
+    <None Include="readme.md" />
   </ItemGroup>
 </Project>
