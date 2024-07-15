@@ -369,3 +369,4 @@ Dependencies/
 
 # Old git
 /.oldgit
+/.deps
