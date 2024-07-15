@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
 
-#include "SDL.h"
+#include "Window.h"
 
 #undef main
 
@@ -21,22 +21,17 @@ struct TimeStop {
 int main(int argc, char* argv[]) {
     printf("Local path: %s\n", argv[0]);
 
-    SDL_Window* window = nullptr;
-    SDL_Surface* wnd_surf = nullptr;
+    TimeStop t;
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "could not initialize sdl2 : % s\n", SDL_GetError());
         return 1;
     }
 
-    window = SDL_CreateWindow("WanichusilkToolKit - test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 360, SDL_WINDOW_SHOWN);
+    graphic_system_lib::Window window("WTK - test", 640, 480);
 
-    if (window == NULL) {
-        fprintf(stderr, "could not create window: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    wnd_surf = SDL_GetWindowSurface(window);
+    auto l = [](){printf("Destroyed\n"); };
+    window.setOnDestroy(l);
 
     SDL_Event event = { 0 };
     bool is_quit = false;
@@ -44,14 +39,14 @@ int main(int argc, char* argv[]) {
     while (!is_quit) {
         while(SDL_PollEvent(&event))
             switch (event.type) {
-            case SDL_QUIT: is_quit = true; break;
+            //case SDL_QUIT: is_quit = true; break;
             default:
                 break;
             }
     }
 
-    SDL_FreeSurface(wnd_surf);
-    SDL_DestroyWindow(window);
+    window.terminate();
+
     SDL_Quit();
     return 0;
 }

@@ -160,6 +160,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GraphicSystem\GraphicSystem.vcxproj">
+      <Project>{08945956-121e-42c5-9b98-07d9b70f11c5}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\sdl2.nuget.redist.2.30.3\build\native\sdl2.nuget.redist.targets" Condition="Exists('..\packages\sdl2.nuget.redist.2.30.3\build\native\sdl2.nuget.redist.targets')" />
