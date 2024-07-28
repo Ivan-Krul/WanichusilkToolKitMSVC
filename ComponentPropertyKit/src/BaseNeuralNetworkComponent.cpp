@@ -17,7 +17,7 @@ namespace comp_prop_kit_lib {
     }
 
     void BaseNeuralNetworkComponent::randomise() noexcept {
-        RandomGeneratorComponent rgc(*const_cast<PropertyList*>(getParent()), getId(), typeid(RandomGeneratorComponent).hash_code());
+        RandomGeneratorComponent rgc;
         rgc.init();
 
         for (auto& layer : mNeurons) {
@@ -40,7 +40,7 @@ namespace comp_prop_kit_lib {
     }
 
     void BaseNeuralNetworkComponent::mutate(float chance, float amplitude) noexcept {
-        RandomGeneratorComponent rgc(*const_cast<PropertyList*>(getParent()), getId(), typeid(RandomGeneratorComponent).hash_code());
+        RandomGeneratorComponent rgc;
         rgc.init();
 
         for (auto& layer : mNeurons) {

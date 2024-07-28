@@ -3,7 +3,7 @@
 namespace graphic_sys_lib {
     void Circle::parseFile(const std::string& pathToCMPT) {
         auto& compacter = parseCmptFile(pathToCMPT);
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         // PosComponent
         pos.setPosX(compacter["pos"][0].convertTo<float>());
         pos.setPosY(compacter["pos"][1].convertTo<float>());
@@ -42,7 +42,7 @@ namespace graphic_sys_lib {
     }
 
     void Circle::parseFloatVar(const hardware_envi_lib::float_var floatVar) {
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         pos.setPosX(floatVar.at(0).at(0).convertTo<float>());
         pos.setPosY(floatVar.at(0).at(1).convertTo<float>());
         pos.setDirX(floatVar.at(0).at(2).convertTo<float>());

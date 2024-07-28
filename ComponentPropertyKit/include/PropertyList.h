@@ -6,107 +6,78 @@
 #include <iostream>
 
 #include "Component.h"
+#include <unordered_map>
 
 namespace comp_prop_kit_lib {
     class PropertyList {
     public:
+        using HasmMap_Comp = std::unordered_map<size_t, std::unique_ptr<Component>>;
+
         template<class T>
         T& pushComponent();
 
         template<class T>
-        _NODISCARD T& getComponent(size_t index);
+        _NODISCARD T& getComponent();
 
         template<class T>
-        _NODISCARD T getComponent(size_t index) const;
+        _NODISCARD T getComponent() const;
+
+        std::vector<size_t> getExistingTypeHash() const noexcept;
 
         template<class T>
-        void popComponent(size_t index);
-
+        void popComponent();
     private:
-        std::vector<std::shared_ptr<Component>> mComponents;
+        HasmMap_Comp mComponents;
     };
 
     template<class T>
-    inline T& PropertyList::pushComponent() {
+    T& PropertyList::pushComponent() {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
-        T* c = new T(*this, mComponents.size(), typeid(T).hash_code());
-        std::shared_ptr<Component> uPtr{c};
-        mComponents.push_back(uPtr);
-        mComponents.back()->init();
-        return *static_cast<T*>(mComponents.back().get());
+        T* component = new T(mComponents.size());
+        mComponents.insert(std::make_pair(typeid(T).hash_code(), std::unique_ptr<Component>(component)));
+        mComponents[typeid(T).hash_code()]->init();
+        return *static_cast<T*>(mComponents[typeid(T).hash_code()].get());
     }
 
     template<class T>
-    inline T& PropertyList::getComponent(size_t index) {
+    T& PropertyList::getComponent() {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
-        if (index >= mComponents.size()) {
-            std::cerr << "out of range: component index is out of range\n";
-            throw std::out_of_range("index is overflowing");
+        auto iter = mComponents.find(typeid(T).hash_code());
+        
+        if (iter == mComponents.end()) {
+            std::cerr << "invalid argument at " << __FUNCTION__ << ": component with this type: \"" << typeid(T).name() << "\" isn't existing\n";
+            throw std::invalid_argument("component with this certain type isn't existing");
         }
 
-        auto comp = [&index](const std::shared_ptr<Component>& ptr) {
-            if (ptr->getInfoHash() == typeid(T).hash_code()) {
-                if (index > 0) {
-                    index--;
-                    return false;
-                }
-                else
-                    return true;
-            } else
-                return false;
-        };
-        auto iter = std::find_if(mComponents.begin(), mComponents.end(), comp);
-
-        return *static_cast<T*>(iter->get());
+        return *static_cast<T*>(iter->second.get());
     }
 
     template<class T>
-    inline T PropertyList::getComponent(size_t index) const {
+    inline T PropertyList::getComponent() const {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
-        if (index >= mComponents.size()) {
-            std::cerr << "out of range: component index is out of range\n";
-            throw std::out_of_range("index is overflowing");
+        auto iter = mComponents.find(typeid(T).hash_code());
+
+        if (iter == mComponents.end()) {
+            std::cerr << "invalid argument at " << __FUNCTION__ << ": component with this type: \"" << typeid(T).name() << "\" isn't existing\n";
+            throw std::invalid_argument("component with this certain type isn't existing");
         }
 
-        auto comp = [&index](const std::shared_ptr<Component>& ptr) {
-            if (ptr->getInfoHash() == typeid(T).hash_code()) {
-                if (index > 0) {
-                    index--;
-                    return false;
-                }
-                else
-                    return true;
-            } else
-                return false;
-        };
-        auto iter = std::find_if(mComponents.begin(), mComponents.end(), comp);
-
-        return *static_cast<T*>(iter->get());
+        return *static_cast<T*>(iter->second.get());
     }
 
     template<class T>
-    inline void PropertyList::popComponent(size_t index) {
+    inline void PropertyList::popComponent() {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
-        if (index >= mComponents.size()) {
-            std::cerr << "out of range: component index is out of range\n";
-            throw std::out_of_range("index is overflowing");
-        }
+        auto iter = mComponents.find(typeid(T).hash_code());
 
-        auto comp = [&index](const std::shared_ptr<Component>& ptr) {
-            if (ptr->getInfoHash() == typeid(T).hash_code()) {
-                if (index > 0) {
-                    index--;
-                    return false;
-                } else
-                    return true;
-            } else
-                return false;
-        };
-        auto iter = std::find_if(mComponents.begin(), mComponents.end(), comp);
+        if (iter == mComponents.end()) {
+            std::cerr << "invalid argument at " << __FUNCTION__ << "t: component with this type: \"" << typeid(T).name() << "\" isn't existing\n";
+            throw std::invalid_argument("component with this certain type isn't existing");
+        }
 
         mComponents.erase(iter);
     }

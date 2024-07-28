@@ -4,8 +4,8 @@
 namespace comp_prop_kit_lib {
     class PositionComponent : public Component {
     public:
-        inline PositionComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash)
-            : Component(parent, id, infoHash) {
+        inline PositionComponent()
+            : Component(typeid(PositionComponent).hash_code()) {
 
        }
 

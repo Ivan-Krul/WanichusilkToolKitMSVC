@@ -7,8 +7,8 @@ namespace comp_prop_kit_lib {
     class TimeStampComponent
     : public Component{
     public:
-        TimeStampComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash)
-            : Component(parent, id, infoHash) {
+        TimeStampComponent()
+            : Component(typeid(TimeStampComponent).hash_code()) {
         }
 
         inline void init() override {

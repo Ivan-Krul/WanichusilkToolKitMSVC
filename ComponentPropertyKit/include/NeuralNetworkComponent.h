@@ -11,8 +11,8 @@ namespace comp_prop_kit_lib {
     class NeuralNetworkComponent :
         public BaseNeuralNetworkComponent {
     public:
-        inline NeuralNetworkComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash)
-            : BaseNeuralNetworkComponent(parent, id, infoHash) {
+        inline NeuralNetworkComponent()
+            : BaseNeuralNetworkComponent(typeid(NeuralNetworkComponent).hash_code()) {
         }
 
         // setup

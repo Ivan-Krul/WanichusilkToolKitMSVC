@@ -33,6 +33,7 @@
     <ClInclude Include="include\TimeStampComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\PropertyList.cpp" />
     <ClCompile Include="src\BaseNeuralNetworkComponent.cpp" />
     <ClCompile Include="src\NeuralNetworkComponent.cpp" />
     <ClCompile Include="src\Smoother.cpp" />

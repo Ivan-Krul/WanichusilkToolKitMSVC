@@ -4,7 +4,7 @@ namespace graphic_sys_lib {
     void TextBox::parseFile(const std::string& pathToCMPT) {
         auto& cmpt = parseCmptFile(pathToCMPT);
 
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         pos.setPosX(cmpt["pos"][0].convertTo<float>());
         pos.setPosY(cmpt["pos"][1].convertTo<float>());
         pos.setDirX(cmpt["pos"][2].convertTo<float>());
@@ -45,7 +45,7 @@ namespace graphic_sys_lib {
     }
 
     void TextBox::parseFloatVar(const hardware_envi_lib::float_var floatVar) {
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         pos.setPosX(floatVar.at(0).at(0).convertTo<float>());
         pos.setPosY(floatVar.at(0).at(1).convertTo<float>());
         pos.setDirX(floatVar.at(0).at(2).convertTo<float>());

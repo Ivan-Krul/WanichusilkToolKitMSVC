@@ -11,8 +11,8 @@ namespace comp_prop_kit_lib {
         public Component {
     public:
 
-        inline RandomGeneratorComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash)
-            : Component(parent, id, infoHash) {
+        inline RandomGeneratorComponent()
+            : Component(typeid(RandomGeneratorComponent).hash_code()) {
             mValue = 0;
             mShifter = 0;
             mMultiplier = 0;

@@ -2,7 +2,7 @@
 
 namespace graphic_sys_lib {
     void TileMap::render() const {
-        const auto& comp = mProperties.getComponent<PosComponent>(0);
+        const auto& comp = mProperties.getComponent<PosComponent>();
         const auto tileSizeX = static_cast<int>(mCommonTileSizeX);
         const auto tileSizeY = static_cast<int>(mCommonTileSizeY);
 
@@ -49,7 +49,7 @@ namespace graphic_sys_lib {
 
     void TileMap::parseFile(const std::string& pathToCMPT) {
         auto& compacter = parseCmptFile(pathToCMPT);
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         // PosComponent
         pos.setPosX(compacter["pos"][0].convertTo<float>());
         pos.setPosY(compacter["pos"][1].convertTo<float>());
@@ -112,7 +112,7 @@ namespace graphic_sys_lib {
     }
 
     void TileMap::parseFloatVar(const hardware_envi_lib::float_var floatVar) {
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         // PosComponent
         pos.setPosX(floatVar.at(0).at(0).convertTo<float>());
         pos.setPosY(floatVar.at(0).at(1).convertTo<float>());

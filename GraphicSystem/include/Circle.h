@@ -15,17 +15,17 @@ namespace graphic_sys_lib {
         }
         inline Circle(int posX, int posY, float radius) : GraphicElement() {
             mRadius = radius;
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mColor = RAYWHITE;
         }
         inline Circle(int posX, int posY, float radius, Color color) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mRadius = radius;
             mColor = color;
         }
 
         inline void render() const override {
-            auto comp = mProperties.getComponent<PosComponent>(0);
+            auto comp = mProperties.getComponent<PosComponent>();
             DrawCircle(comp.getPosX<int>(), comp.getPosY<int>(), mRadius, mColor);
         }
 

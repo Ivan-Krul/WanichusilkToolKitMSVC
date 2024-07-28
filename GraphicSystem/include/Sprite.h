@@ -16,12 +16,12 @@ namespace graphic_sys_lib {
 
         inline Sprite(const Texture2D& mTexture, int mPosX, int mPosY, const Color& mTint)
              : GraphicElement(), mTexture(mTexture), mTint(mTint) {
-            mProperties.getComponent<PosComponent>(0).setPos(mPosX, mPosY);
+            mProperties.getComponent<PosComponent>().setPos(mPosX, mPosY);
         }
 
         inline Sprite(const Texture2D& mTexture, int mPosX, int mPosY)
             : GraphicElement(), mTexture(mTexture), mTint(RAYWHITE) {
-            mProperties.getComponent<PosComponent>(0).setPos(mPosX, mPosY);
+            mProperties.getComponent<PosComponent>().setPos(mPosX, mPosY);
         }
 
         inline Sprite(const Texture2D& mTexture, const Color& mTint)
@@ -33,7 +33,7 @@ namespace graphic_sys_lib {
         }
 
         inline void render() const override {
-            auto comp = mProperties.getComponent<PosComponent>(0);
+            auto comp = mProperties.getComponent<PosComponent>();
             DrawTexture(mTexture, comp.getPosX<int>(), comp.getPosY<int>(), mTint);
         }
 

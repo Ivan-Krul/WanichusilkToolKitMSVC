@@ -10,24 +10,24 @@ namespace graphic_sys_lib {
             mColor = RAYWHITE;
         }
         inline Rectangle(int posX, int posY) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mProperties.pushComponent<PosComponent>();
             mColor = RAYWHITE;
         }
         inline Rectangle(int posX, int posY,int width, int height) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mProperties.pushComponent<PosComponent>().setPos(width, height);
             mColor = RAYWHITE;
         }
         inline Rectangle(int posX, int posY, int width, int height, Color color) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mProperties.pushComponent<PosComponent>().setPos(width, height);
             mColor = color;
         }
 
         inline void render() const override {
-            auto comp = mProperties.getComponent<PosComponent>(0);
-            auto comp1 = mProperties.getComponent<PosComponent>(1);
+            auto comp = mProperties.getComponent<PosComponent>();
+            auto comp1 = mProperties.getComponent<PosComponent>();
             DrawRectangle(comp.getPosX<int>(), comp.getPosY<int>(), comp1.getPosX<int>(), comp1.getPosY<int>(), mColor);
         }
 

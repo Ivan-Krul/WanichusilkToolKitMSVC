@@ -14,30 +14,30 @@ namespace graphic_sys_lib {
         }
 
         inline TextBox(const std::string& content, int posX, int posY) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mContent = content;
 
             mColor = RAYWHITE;
         }
         inline TextBox(const std::string content,int posX, int posY, float fontSize) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mColor = RAYWHITE;
             setFontSize(fontSize);
         }
         inline TextBox(const std::string content, int posX, int posY, Color color) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mColor = color;
             mContent = content;
         }
         inline TextBox(const std::string& content, int posX, int posY, float fontSize, Color color) : GraphicElement() {
-            mProperties.getComponent<PosComponent>(0).setPos(posX, posY);
+            mProperties.getComponent<PosComponent>().setPos(posX, posY);
             mColor = color;
             mContent = content;
             setFontSize(fontSize);
         }
 
         inline void render() const override {
-            auto comp = mProperties.getComponent<PosComponent>(0);
+            auto comp = mProperties.getComponent<PosComponent>();
             DrawText(mContent.c_str(), comp.getPosX<int>(), comp.getPosY<int>(), static_cast<int>(mFontSize), mColor);
         }
 

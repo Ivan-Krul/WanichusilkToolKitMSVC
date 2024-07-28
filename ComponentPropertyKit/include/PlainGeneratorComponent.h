@@ -17,8 +17,8 @@ namespace comp_prop_kit_lib {
             PlainValue value;
         };
 
-        inline PlainGeneratorComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash)
-            : Component(parent, id, infoHash), mRandomizer(parent, id, typeid(RandComponent).hash_code()) {
+        inline PlainGeneratorComponent()
+            : Component(typeid(PlainGeneratorComponent).hash_code()), mRandomizer() {
             mSavedPoints = {};
             mSeed = (intptr_t)time(NULL);
         }

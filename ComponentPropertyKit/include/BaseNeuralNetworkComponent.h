@@ -20,12 +20,12 @@ namespace comp_prop_kit_lib {
             NeuralValue gradientB;
         };
 
-        inline BaseNeuralNetworkComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash)
-            : Component(parent, id, infoHash) {
+        inline BaseNeuralNetworkComponent(ComponentTypeHash infoHash = typeid(BaseNeuralNetworkComponent).hash_code())
+            : Component(infoHash) {
         }
 
-        inline BaseNeuralNetworkComponent(PropertyList& parent, ComponentID id, ComponentTypeHash infoHash, const std::vector<std::vector<Neuron>>& mNeurons)
-            : mNeurons(mNeurons), Component(parent, id, infoHash) {
+        inline BaseNeuralNetworkComponent(const std::vector<std::vector<Neuron>>& mNeurons, ComponentTypeHash infoHash = typeid(BaseNeuralNetworkComponent).hash_code())
+            : mNeurons(mNeurons), Component(infoHash) {
         }
         
         inline BaseNeuralNetworkComponent(BaseNeuralNetworkComponent&& base) noexcept

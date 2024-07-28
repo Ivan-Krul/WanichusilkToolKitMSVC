@@ -4,13 +4,13 @@ namespace graphic_sys_lib {
     void Rectangle::parseFile(const std::string& pathToCMPT) {
         auto& cmpt = parseCmptFile(pathToCMPT);
 
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         pos.setPosX(cmpt["pos"][0].convertTo<float>());
         pos.setPosY(cmpt["pos"][1].convertTo<float>());
         pos.setDirX(cmpt["pos"][2].convertTo<float>());
         pos.setDirY(cmpt["pos"][3].convertTo<float>());
 
-        auto& size = mProperties.getComponent<PosComponent>(0);
+        auto& size = mProperties.getComponent<PosComponent>();
         size.setPosX(cmpt["size"][0].convertTo<float>());
         size.setPosY(cmpt["size"][1].convertTo<float>());
         size.setDirX(cmpt["size"][2].convertTo<float>());
@@ -49,13 +49,13 @@ namespace graphic_sys_lib {
     }
 
     void Rectangle::parseFloatVar(const hardware_envi_lib::float_var floatVar) {
-        auto& pos = mProperties.getComponent<PosComponent>(0);
+        auto& pos = mProperties.getComponent<PosComponent>();
         pos.setPosX(floatVar.at(0).at(0).convertTo<float>());
         pos.setPosY(floatVar.at(0).at(1).convertTo<float>());
         pos.setDirX(floatVar.at(0).at(2).convertTo<float>());
         pos.setDirY(floatVar.at(0).at(3).convertTo<float>());
 
-        auto& size = mProperties.getComponent<PosComponent>(0);
+        auto& size = mProperties.getComponent<PosComponent>();
         size.setPosX(floatVar.at(1).at(0).convertTo<float>());
         size.setPosY(floatVar.at(1).at(1).convertTo<float>());
         size.setDirX(floatVar.at(1).at(2).convertTo<float>());
