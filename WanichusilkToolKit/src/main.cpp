@@ -3,6 +3,8 @@
 
 #include "Window.h"
 
+//#include "ComponentPropertyKit.h"
+
 #undef main
 
 struct TimeStop {
@@ -22,7 +24,7 @@ int main(int argc, char* argv[]) {
     printf("Local path: %s\n", argv[0]);
 
     TimeStop t;
-
+    
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "could not initialize sdl2 : % s\n", SDL_GetError());
         return 1;
@@ -39,7 +41,7 @@ int main(int argc, char* argv[]) {
     while (!is_quit) {
         while(SDL_PollEvent(&event))
             switch (event.type) {
-            //case SDL_QUIT: is_quit = true; break;
+            case SDL_QUIT: is_quit = true; break;
             default:
                 break;
             }
@@ -48,6 +50,9 @@ int main(int argc, char* argv[]) {
     window.terminate();
 
     SDL_Quit();
+    
+
+    std::cout << t.stop() << "ms\n";
     return 0;
 }
 

@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComponentPropertyKit", "Com
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FloatVarContainer", "FloatVarContainer\FloatVarContainer.vcxproj", "{73024FA4-B917-48A0-9260-F133B014F54A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReSDLMean", "ReSDLMean\ReSDLMean.vcxproj", "{1B8271AA-CE9B-485F-9F1E-6758100B2149}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -69,6 +71,18 @@ Global
 		{73024FA4-B917-48A0-9260-F133B014F54A}.Release|x64.Build.0 = Release|x64
 		{73024FA4-B917-48A0-9260-F133B014F54A}.Release|x86.ActiveCfg = Release|Win32
 		{73024FA4-B917-48A0-9260-F133B014F54A}.Release|x86.Build.0 = Release|Win32
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Debug|ARM.ActiveCfg = Debug|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Debug|ARM.Build.0 = Debug|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Debug|x64.ActiveCfg = Debug|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Debug|x64.Build.0 = Debug|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Debug|x86.ActiveCfg = Debug|Win32
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Debug|x86.Build.0 = Debug|Win32
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Release|ARM.ActiveCfg = Release|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Release|ARM.Build.0 = Release|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Release|x64.ActiveCfg = Release|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Release|x64.Build.0 = Release|x64
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Release|x86.ActiveCfg = Release|Win32
+		{1B8271AA-CE9B-485F-9F1E-6758100B2149}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
