@@ -10,9 +10,9 @@ namespace graphic_system_lib
 	{
 	public:
 		inline Window() noexcept = default;
-		Window(const char* name, size_t width, size_t height);
+		Window(const char* name, int width, int height);
 
-		bool create(const char* name, size_t width, size_t height) noexcept;
+		bool create(const char* name, int width, int height) noexcept;
 
 
 		inline int getWidth() const noexcept { return mpWindowSurface ? mpWindowSurface->w : -1; }
@@ -25,7 +25,6 @@ namespace graphic_system_lib
 		SDL_Window* getWindow() { return mpWindow; }
 		SDL_Surface* getWindowSufracef() { return mpWindowSurface; }
 
-
 		void terminate();
 
 		~Window() {
@@ -35,7 +34,7 @@ namespace graphic_system_lib
 		SDL_Window* mpWindow = nullptr;
 		SDL_Surface* mpWindowSurface = nullptr;
 
-		std::string mWindowName = "window";
+		char* mWindowName = nullptr;
 
 		void(*mfOnCreate)(void) = nullptr;
 		void(*mfOnDestroy)(void) = nullptr;
