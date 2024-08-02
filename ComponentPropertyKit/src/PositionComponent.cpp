@@ -16,3 +16,12 @@ namespace comp_prop_kit_lib {
         mPosY += mDirY;
     }
 }
+
+template<>
+comp_prop_kit_lib::PositionComponent& comp_prop_kit_lib::PropertyList::pushComponent<comp_prop_kit_lib::PositionComponent>();
+template<>
+comp_prop_kit_lib::PositionComponent& comp_prop_kit_lib::PropertyList::getComponent<comp_prop_kit_lib::PositionComponent>();
+template<>
+comp_prop_kit_lib::PositionComponent comp_prop_kit_lib::PropertyList::getComponent<comp_prop_kit_lib::PositionComponent>() const;
+template<>
+void comp_prop_kit_lib::PropertyList::popComponent<comp_prop_kit_lib::PositionComponent>();

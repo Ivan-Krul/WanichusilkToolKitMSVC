@@ -6,3 +6,12 @@ namespace comp_prop_kit_lib {
         mThreadsMaxCount = std::min(threads, static_cast<size_t>(std::thread::hardware_concurrency()));
     }
 }
+
+template<>
+comp_prop_kit_lib::NeuralNetworkComponent& comp_prop_kit_lib::PropertyList::pushComponent<comp_prop_kit_lib::NeuralNetworkComponent>();
+template<>
+comp_prop_kit_lib::NeuralNetworkComponent& comp_prop_kit_lib::PropertyList::getComponent<comp_prop_kit_lib::NeuralNetworkComponent>();
+template<>
+comp_prop_kit_lib::NeuralNetworkComponent comp_prop_kit_lib::PropertyList::getComponent<comp_prop_kit_lib::NeuralNetworkComponent>() const;
+template<>
+void comp_prop_kit_lib::PropertyList::popComponent<comp_prop_kit_lib::NeuralNetworkComponent>();

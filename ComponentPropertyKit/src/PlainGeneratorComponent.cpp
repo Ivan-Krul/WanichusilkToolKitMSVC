@@ -18,3 +18,12 @@ namespace comp_prop_kit_lib {
 
     }
 }
+
+template<>
+comp_prop_kit_lib::PlainGeneratorComponent& comp_prop_kit_lib::PropertyList::pushComponent<comp_prop_kit_lib::PlainGeneratorComponent>();
+template<>
+comp_prop_kit_lib::PlainGeneratorComponent& comp_prop_kit_lib::PropertyList::getComponent<comp_prop_kit_lib::PlainGeneratorComponent>();
+template<>
+comp_prop_kit_lib::PlainGeneratorComponent comp_prop_kit_lib::PropertyList::getComponent<comp_prop_kit_lib::PlainGeneratorComponent>() const;
+template<>
+void comp_prop_kit_lib::PropertyList::popComponent<comp_prop_kit_lib::PlainGeneratorComponent>();

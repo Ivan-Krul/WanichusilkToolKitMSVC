@@ -36,6 +36,7 @@
     <ClCompile Include="src\PropertyList.cpp" />
     <ClCompile Include="src\BaseNeuralNetworkComponent.cpp" />
     <ClCompile Include="src\NeuralNetworkComponent.cpp" />
+    <ClCompile Include="src\RandomGeneratorComponent.cpp" />
     <ClCompile Include="src\Smoother.cpp" />
     <ClCompile Include="src\PlainGeneratorComponent.cpp" />
     <ClCompile Include="src\PositionComponent.cpp" />

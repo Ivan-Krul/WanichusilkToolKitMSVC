@@ -34,8 +34,7 @@ namespace comp_prop_kit_lib {
     T& PropertyList::pushComponent() {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
-        T* component = new T(mComponents.size());
-        mComponents.insert(std::make_pair(typeid(T).hash_code(), std::unique_ptr<Component>(component)));
+        mComponents.insert(std::make_pair(typeid(T).hash_code(), std::unique_ptr<Component>{ new T() }));
         mComponents[typeid(T).hash_code()]->init();
         return *static_cast<T*>(mComponents[typeid(T).hash_code()].get());
     }
@@ -55,7 +54,7 @@ namespace comp_prop_kit_lib {
     }
 
     template<class T>
-    inline T PropertyList::getComponent() const {
+    T PropertyList::getComponent() const {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
         auto iter = mComponents.find(typeid(T).hash_code());
@@ -69,7 +68,7 @@ namespace comp_prop_kit_lib {
     }
 
     template<class T>
-    inline void PropertyList::popComponent() {
+    void PropertyList::popComponent() {
         static_assert(std::is_base_of<Component, T>::value, "assert: template don't have a parent Component");
 
         auto iter = mComponents.find(typeid(T).hash_code());
