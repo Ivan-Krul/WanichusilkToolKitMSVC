@@ -3,16 +3,7 @@
 
 namespace graphic_system_lib
 {
-	Window::Window(const char* name, int width, int height) {
-		mpWindow = nullptr;
-		mpWindowSurface = nullptr;
-		mWindowName = nullptr;
-		if (!create(name, width, height))
-			throw std::runtime_error((std::string("You can't create a window: ") + SDL_GetError()).c_str());
-
-	}
-
-	bool Window::create(const char* name, int width, int height) noexcept
+	bool BasicWindow::create(const char* name, int width, int height, SDL_WindowFlags flags) noexcept
 	{
 #pragma warning(suppress : 4554)
 		if (width >> sizeof(width) * 8 - 1) width = ((width << 1) >> 1);
@@ -31,31 +22,62 @@ namespace graphic_system_lib
 		mWindowName[name_len] = 0;
 
 		//Create window
-		if ((mpWindow = SDL_CreateWindow(mWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN)) == nullptr)
+		if ((mpWindow = SDL_CreateWindow(mWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags)) == nullptr)
 			return false;
 		else
-			if((mpWindowSurface = SDL_GetWindowSurface(mpWindow)) == nullptr) return false; // Get window surface
+			if(!createSurface()) return false; // Get window surface
 
 		if(mfOnCreate)
 			mfOnCreate();
+
+		
 		return true;
 	}
 
-	void Window::terminate()
-	{
+	void BasicWindow::terminate() {
 		if (mpWindow == nullptr) return;
 
-		SDL_FreeSurface(mpWindowSurface);
 		SDL_DestroyWindow(mpWindow);
 
-		if(mWindowName)
+		if (mWindowName)
 			delete[] mWindowName;
 
-		mpWindowSurface = nullptr;
+		terminateSurface();
 		mpWindow = nullptr;
 		mWindowName = nullptr;
 
 		if (mfOnDestroy)
 			mfOnDestroy();
+	}
+
+	WindowCPU::WindowCPU(const char* name, int width, int height, SDL_WindowFlags flags) {
+		if (!create(name, width, height, flags))
+			throw std::runtime_error((std::string("You can't create a window: ") + SDL_GetError()).c_str());
+
+	}
+
+	bool WindowCPU::createSurface() {
+		return (mpWindowSurface = SDL_GetWindowSurface(mpWindow));
+	}
+
+	void WindowCPU::terminateSurface() {
+		SDL_FreeSurface(mpWindowSurface);
+		mpWindowSurface = nullptr;
+	}
+
+
+	WindowGPU::WindowGPU(const char* name, int width, int height, SDL_WindowFlags flags) {
+		if (!create(name, width, height, flags))
+			throw std::runtime_error((std::string("You can't create a window: ") + SDL_GetError()).c_str());
+
+	}
+
+	bool WindowGPU::createSurface() {
+		return (mpRenderer = SDL_GetRenderer(mpWindow)) == nullptr;
+	}
+
+	void WindowGPU::terminateSurface() {
+		SDL_DestroyRenderer(mpRenderer);
+		mpRenderer = nullptr;
 	}
 }

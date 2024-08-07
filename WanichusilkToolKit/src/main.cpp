@@ -45,6 +45,14 @@ int main(int argc, char* argv[]) {
             default:
                 break;
             }
+
+        //Fill the surface white
+        SDL_FillRect(window.getWindowSufrace(), NULL, SDL_MapRGB(window.getWindowSufrace()->format, 0xFF, 0xFF, 0xFF));
+
+        //Update the surface
+        SDL_UpdateWindowSurface(window.getWindow());
+
+        SDL_Delay(10);
     }
 
     window.terminate();
