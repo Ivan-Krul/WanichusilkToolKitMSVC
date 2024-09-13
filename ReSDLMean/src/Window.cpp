@@ -1,10 +1,12 @@
 #include "Window.h"
 #include <stdexcept>
 
-namespace graphic_system_lib
+namespace resdl_mean_lib
 {
 	bool BasicWindow::create(const char* name, int width, int height, SDL_WindowFlags flags) noexcept
 	{
+		if (SDLRoot::getInstance() & (Uint32)SDLRoot::InitPart::video) return false;
+
 #pragma warning(suppress : 4554)
 		if (width >> sizeof(width) * 8 - 1) width = ((width << 1) >> 1);
 #pragma warning(suppress : 4554)
@@ -61,7 +63,6 @@ namespace graphic_system_lib
 	}
 
 	void WindowCPU::terminateSurface() {
-		SDL_FreeSurface(mpWindowSurface);
 		mpWindowSurface = nullptr;
 	}
 

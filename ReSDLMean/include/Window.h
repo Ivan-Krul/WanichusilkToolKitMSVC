@@ -5,7 +5,9 @@
 #include "SDL.h"
 #undef main
 
-namespace graphic_system_lib
+#include "SDLRoot.h"
+
+namespace resdl_mean_lib
 {
 	class BasicWindow {
 	public:
