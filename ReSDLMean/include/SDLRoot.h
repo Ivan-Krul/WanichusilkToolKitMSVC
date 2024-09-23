@@ -1,6 +1,8 @@
 #pragma once
 #include "SDL.h"
 
+#define PRECHECK_INSTANCE
+
 namespace resdl_mean_lib {
     class SDLRoot {
     public:
@@ -21,7 +23,7 @@ namespace resdl_mean_lib {
 
         };
 
-        inline bool init(Uint32 init_parts = ((Uint32)InitPart::events | (Uint32)InitPart::video));
+        bool init(Uint32 init_parts = ((Uint32)InitPart::events | (Uint32)InitPart::video));
         inline void quit();
 
         inline Uint32 getInitPart() const noexcept { return mInitParts; }

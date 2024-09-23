@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include "Window.h"
+#include "Texture.h"
 
 //#include "ComponentPropertyKit.h"
 
@@ -26,14 +27,26 @@ int main(int argc, char* argv[]) {
     TimeStop t;
 
     if (resdl_mean_lib::SDLRoot::getInstance().init()) {
-        fprintf(stderr, "could not initialize sdl2 : % s\n", SDL_GetError());
+        fprintf(stderr, "could not initialize sdl2 : %s\n", SDL_GetError());
         return 1;
     }
 
-    resdl_mean_lib::Window window("WTK - test", 640, 480);
+    resdl_mean_lib::WindowGPU* window;
+    resdl_mean_lib::Texture* tex;
 
-    auto l = [](){printf("Destroyed\n"); };
-    window.setOnDestroy(l);
+    try {
+        window = new resdl_mean_lib::WindowGPU("WTK - test", 640, 480);
+        tex = new resdl_mean_lib::Texture("../assets/jania new.png", window->getWindowSufrace());
+    }
+    catch (const std::string& eror) {
+        fprintf(stderr, "could not initialize the project : %s\n", SDL_GetError());
+        return 0;
+    }
+
+    // wtf is going on with exception handling?????
+
+    auto l = []() {printf("Destroyed\n"); };
+    window->setOnDestroy(l);
 
     SDL_Event event = { 0 };
     bool is_quit = false;
@@ -47,20 +60,20 @@ int main(int argc, char* argv[]) {
                 break;
             }
 
-        SDL_Rect rect{ rand() % 100 + 100,rand() % 100 + 100,rand() % 100 + 50,rand() % 100 + 50 };
-        //Fill the surface white
-        SDL_FillRect(window.getWindowSufrace(), NULL, SDL_MapRGB(window.getWindowSufrace()->format, 0xFF, 0xFF, 0xFF));
-        SDL_FillRect(window.getWindowSufrace(), &rect, SDL_MapRGB(window.getWindowSufrace()->format, 0xFF, ((int)t_s), 0x00));
+
+        SDL_RenderClear(window->getWindowSufrace());
+
+        SDL_RenderPresent(window->getWindowSufrace());
 
         //Update the surface
-        SDL_UpdateWindowSurface(window.getWindow());
+        //SDL_UpdateWindowSurface(window.getWindow());
 
         SDL_Delay(10);
         t_s += 1;
         
     }
 
-    window.terminate();
+    window->terminate();
 
     SDL_Quit();
     

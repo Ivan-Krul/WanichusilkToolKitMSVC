@@ -5,7 +5,9 @@ namespace resdl_mean_lib
 {
 	bool BasicWindow::create(const char* name, int width, int height, SDL_WindowFlags flags) noexcept
 	{
-		if (SDLRoot::getInstance() & (Uint32)SDLRoot::InitPart::video) return false;
+#ifdef PRECHECK_INSTANCE
+		if ((SDLRoot::getInstance() & (Uint32)SDLRoot::InitPart::video) == 0) return false;
+#endif
 
 #pragma warning(suppress : 4554)
 		if (width >> sizeof(width) * 8 - 1) width = ((width << 1) >> 1);
